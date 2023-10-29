@@ -3,6 +3,8 @@ from __future__ import annotations
 import datetime
 from typing import TypedDict, TYPE_CHECKING
 
+import bcrypt
+
 import util.config as config
 
 if TYPE_CHECKING:
@@ -19,7 +21,6 @@ class UserData(TypedDict):
 	username: str
 	email: str
 	password_hash: str
-	password_salt: str
 	registration_date: datetime.datetime
 	sessions: list[UserSession]
 
@@ -53,13 +54,8 @@ class User:
 	def password_hash(self, new: str):
 		self._data["password_hash"] = new
 
-	@property
-	def password_salt(self) -> str:
-		return self._data.get("password_salt", "undefined")
-
-	@password_salt.setter
-	def password_salt(self, new: str):
-		self._data["password_salt"] = new
+	def edir_password(self, new: str):
+		self.password_hash = bcrypt.hashpw(new.encode("utf-8"), bcrypt.gensalt())
 
 	@property
 	def registration_date(self) -> datetime.datetime:

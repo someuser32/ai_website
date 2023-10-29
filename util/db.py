@@ -1,7 +1,10 @@
+import datetime
 import os
 from contextlib import suppress as except_error
 from typing import Iterable, Any
 
+import bcrypt
+import pymongo.errors
 from bson import CodecOptions
 from deepdiff import DeepDiff
 from motor.core import AgnosticCollection, AgnosticDatabase
@@ -10,6 +13,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 import util.config as config
 from .user import User
 from .lib import parse_deepdiff_keys, recursively_setvalue_from, recursively_removekey, recursively_setvalue, recursively_getvalue, safe_typecast
+from .exceptions import UserAlreadyExistsError
 
 
 class DB(AsyncIOMotorClient):
@@ -32,12 +36,27 @@ class DB(AsyncIOMotorClient):
 			return None
 		del user_data["_id"]
 		default_user = await self.users.find_one(filter={"__is_default": True})
-		user_data = await self.sync_user(user_data, )
-		return User(data=user_data)
+		user_data = await self.sync_user(user_data, default_user)
+		return User(data=user_data, db=self)
+
+	async def create_user(self, username: str, email: str, password: str) -> User:
+		user = await self.query_user({"username": username})
+		if user is not None:
+			raise UserAlreadyExistsError(f"user {username} is already exists!")
+		default_user = await self.users.find_one(filter={"__is_default": True})
+		user_data = type(self).sync_user_data({"username": username, "email": email, "password_hash": bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())}, default_user)
+		try:
+			await self.users.insert_one(user_data)
+		except pymongo.errors.DuplicateKeyError:
+			raise UserAlreadyExistsError(f"user {username} is already exists!")
+		return User(data=user_data, db=self)
 
 	async def update_user(self, user: User):
-		changes = set()
-		await self.users.update_one({"username": user.username}, {"$set": user.__dict__})
+		diff = DeepDiff(user.__dict__, user._persistent_data)
+		new_data = user.__dict__
+		if changed := diff.get("values_changed"):
+			new_data = {".".join(parse_deepdiff_keys(changek)) for changek in changed.keys()}
+		await self.users.update_one({"username": user.username}, {"$set": new_data})
 
 	@staticmethod
 	def sync_user_data(data: dict, default_data: dict, exceptions: Iterable[str]=None) -> dict | None:
@@ -63,8 +82,8 @@ class DB(AsyncIOMotorClient):
 				recursively_setvalue(new_data, safe_typecast(old, new), keys)
 		return new_data
 
-	async def sync_user(self, user: dict, default_user: dict) -> dict | None:
-		if new_user := type(self).sync_user_data(data=user, default_data=default_user):
-			await self.users.update_one({"username": user["username"]}, {"$set": new_user})
+	async def sync_user(self, user_data: dict, default_user: dict) -> dict | None:
+		if new_user := type(self).sync_user_data(data=user_data, default_data=default_user):
+			await self.users.update_one({"username": user_data["username"]}, {"$set": new_user})
 			return new_user
 		return None
