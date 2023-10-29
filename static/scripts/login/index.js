@@ -10,7 +10,7 @@ function Login(username, password, save) {
 	};
 	const xhr = new XMLHttpRequest();
 	xhr.open("POST", "/api/login", true);
-	xhr.setRequestHeader("Content-Type", "application/json");
+	xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhr.onreadystatechange = (event) => {
 		if (xhr.readyState != 4) {
 			return;
@@ -28,7 +28,7 @@ function Login(username, password, save) {
 				break;
 		};
 	};
-	xhr.send(JSON.stringify({
+	xhr.send($.param({
 		"username": username,
 		"password": password,
 		"save": save != undefined ? +save : 0,

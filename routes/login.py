@@ -6,7 +6,7 @@ from contextlib import suppress as except_error
 from typing import TYPE_CHECKING
 
 from email_validator import validate_email, EmailNotValidError
-from fastapi import Request, Depends, Response
+from fastapi import Request, Depends, Response, Body
 from fastapi.exceptions import HTTPException
 from fastapi.responses import RedirectResponse
 from fastapi.security import OAuth2PasswordRequestForm
@@ -57,7 +57,7 @@ class LoginPage(BaseRoute):
 	async def login_page(self, request: Request, registration: int | None=0, utm_source: str | None=None):
 		user = request.state.user
 		if user is not None:
-			return RedirectResponse(request.url_for("/", utm_source="login"))
+			return RedirectResponse(f"{request.url_for('/')}?utm_source=login")
 		captcha = None
 		if registration == 1:
 			text, captcha = generate_captcha(request=request, width=400, height=100)
@@ -68,7 +68,7 @@ class LoginPage(BaseRoute):
 		response.status_code = 307
 		return response
 
-	async def api_login(self, response: Response, data: OAuth2PasswordRequestForm=Depends(), save: int=0):
+	async def api_login(self, response: Response, data: OAuth2PasswordRequestForm=Depends(), save: int=Body(0)):
 		user = await self.db.query_user({"username": data.username})
 		if not user:
 			raise InvalidCredentialsException

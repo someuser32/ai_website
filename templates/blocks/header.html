@@ -31,10 +31,22 @@
 								</li>
 							</ul>
 						</div>
-						<div id="LoginButtons">
-							<a id="Register" class="LoginRegister" href="/login?utm_source=index&registration=1">Sign Up</a>
-							<a id="Login" class="LoginRegister" href="/login?utm_source=index">Login</a>
-						</div>
+						{% if request.state.user %}
+							<div id="AccountButtons">
+								<a id="Account" class="Account" href="/profile?utm_source=navbuttons">
+									<div>{{ request.state.user.username }}</div>
+									<div class="underline"></div>
+								</a>
+								<a id="Logout" class="Account" onclick="location.replace('/logout')">
+									<svg xmlns="http://www.w3.org/2000/svg" height="26" viewBox="0 -960 960 960" width="48"><path fill="white" d="M180-120q-24 0-42-18t-18-42v-600q0-24 18-42t42-18h299v60H180v600h299v60H180Zm486-185-43-43 102-102H360v-60h363L621-612l43-43 176 176-174 174Z"/></svg>
+								</a>
+							</div>
+						{% else %}
+							<div id="LoginButtons">
+								<a id="Register" class="LoginRegister" href="/login?utm_source=navbuttons&registration=1">Sign Up</a>
+								<a id="Login" class="LoginRegister" href="/login?utm_source=navbuttons">Login</a>
+							</div>
+						{% endif %}
 					</div>
 				</div>
 			</div>
