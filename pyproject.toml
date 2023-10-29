@@ -17,6 +17,7 @@ dotenv-python = "^0.0.1"
 itsdangerous = "^2.1.2"
 python-dotenv = "^1.0.0"
 fastapi-login = "^1.9.1"
+pytz = "^2023.3.post1"
 
 
 [build-system]

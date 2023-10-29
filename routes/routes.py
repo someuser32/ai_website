@@ -5,9 +5,12 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
 class BaseRoute:
-	def __init__(self, server: FastAPI):
+	def __init__(self, server: FastAPI, **kwargs):
 		self._server = server
 		self._templates = Jinja2Templates(directory="templates")
+
+		for key, value in kwargs.items():
+			setattr(self, f"_{key}", value)
 
 		self.routes : dict[str, Callable[..., Coroutine] | Iterable[Callable[..., Coroutine], dict[str, Any]]] = {}
 
@@ -29,7 +32,3 @@ class BaseRoute:
 	@property
 	def templates(self) -> Jinja2Templates:
 		return self._templates
-
-def register_routes(*routes: BaseRoute, server: FastAPI):
-	for route in routes:
-		route(server=server)

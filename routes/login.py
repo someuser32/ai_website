@@ -1,7 +1,12 @@
+import os
+
 from fastapi import Request
+from fastapi_login import LoginManager
 
 from .routes import BaseRoute
 from .lib import generate_captcha
+
+manager = LoginManager(os.getenv("LOGIN_SECRET"), "/api/login")
 
 class LoginPage(BaseRoute):
 	def init(self):
