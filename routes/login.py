@@ -1,21 +1,71 @@
-import os
+from __future__ import annotations
 
-from fastapi import Request
+import os
+from typing import TYPE_CHECKING
+
+from fastapi import Request, Depends, Response
+from fastapi.responses import RedirectResponse
+from fastapi.security import OAuth2PasswordRequestForm
 from fastapi_login import LoginManager
+from fastapi_login.exceptions import InvalidCredentialsException
 
 from .routes import BaseRoute
-from .lib import generate_captcha
+from .lib import generate_captcha, check_captcha
 
-manager = LoginManager(os.getenv("LOGIN_SECRET"), "/api/login")
+if TYPE_CHECKING:
+	from ..util import DB, User
+
+
+manager = LoginManager(os.getenv("LOGIN_SECRET"), "/api/login", use_cookie=True)
 
 class LoginPage(BaseRoute):
 	def init(self):
+		manager.useRequest(self.server)
 		self.routes = {
 			"/login": self.login_page,
+			"/logout": self.logout_page,
+			"/api/login": (self.api_login, {
+				"methods": ("POST",),
+			}),
 		}
+		manager.user_loader()(self._query_login_user)
+
+	@property
+	def db(self) -> DB:
+		return self._db
 
 	async def login_page(self, request: Request, registration: int | None=0, utm_source: str | None=None):
+		user = request.state.user
+		if user is not None:
+			return RedirectResponse(request.url_for("/"))
 		captcha = None
 		if registration == 1:
 			text, captcha = generate_captcha(request=request, width=400, height=100)
 		return self.templates.TemplateResponse("login.html", {"request": request, "registration": registration, "captcha": captcha})
+
+	async def logout_page(self, request: Request, redirect_to: str | None=None):
+		return await self.api_logout(request=request, response=RedirectResponse(url=redirect_to or request.url_for("/")))
+
+	async def api_login(self, response: Response, data: OAuth2PasswordRequestForm=Depends()):
+		user = await self.db.query_user({"username": data.username})
+		if not user:
+			raise InvalidCredentialsException
+		elif not user.check_password(data.password):
+			raise InvalidCredentialsException
+
+		session_token = manager.create_access_token(data={"sub": user.username})
+		manager.set_cookie(response, session_token)
+		response.status_code = 200
+
+		return response
+
+	async def api_logout(self, request: Request, response: Response):
+		user = request.state.user
+		if not user:
+			raise InvalidCredentialsException
+
+		response.delete_cookie("access-token")
+		return response
+
+	async def _query_login_user(self, username: str):
+		return await self.db.query_user({"username": username})

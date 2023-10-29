@@ -14,7 +14,9 @@ function Login(username, password) {
 		if (data["message"] != undefined) {
 			alert(data["message"]);
 		};
-	}, "json");
+	}, "json").fail(() => {
+		console.log("fail");
+	});
 };
 
 /**

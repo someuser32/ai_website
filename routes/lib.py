@@ -13,3 +13,9 @@ def generate_captcha(request: Request, width: int, height: int) -> tuple[str, st
 	captcha = f"data:image/png;base64,{base64.b64encode(img.read()).decode('utf-8')}"
 	request.session["captcha"] = text
 	return (text, captcha)
+
+def check_captcha(request: Request, answer: str) -> bool:
+	valid = request.session.get("captcha") == answer
+	if "captcha" in request.session:
+		del request.session["captcha"]
+	return valid

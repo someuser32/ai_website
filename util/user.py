@@ -29,6 +29,7 @@ class User:
 	def __init__(self, data: dict, db: DB):
 		self._data = data
 		self._persistent_data = data.copy()
+		self._db = db
 
 	@property
 	def username(self) -> str:
@@ -54,8 +55,11 @@ class User:
 	def password_hash(self, new: str):
 		self._data["password_hash"] = new
 
-	def edir_password(self, new: str):
-		self.password_hash = bcrypt.hashpw(new.encode("utf-8"), bcrypt.gensalt())
+	def edit_password(self, new: str):
+		self.password_hash = bcrypt.hashpw(new.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+
+	def check_password(self, password: str) -> bool:
+		return bcrypt.checkpw(password.encode("utf-8"), self.password_hash.encode("utf-8"))
 
 	@property
 	def registration_date(self) -> datetime.datetime:

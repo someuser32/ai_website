@@ -34,9 +34,8 @@ class DB(AsyncIOMotorClient):
 		user_data = await self.users.find_one(filter=query)
 		if user_data is None:
 			return None
-		del user_data["_id"]
 		default_user = await self.users.find_one(filter={"__is_default": True})
-		user_data = await self.sync_user(user_data, default_user)
+		user_data = (await self.sync_user(user_data, default_user)) or user_data
 		return User(data=user_data, db=self)
 
 	async def create_user(self, username: str, email: str, password: str) -> User:
@@ -44,7 +43,7 @@ class DB(AsyncIOMotorClient):
 		if user is not None:
 			raise UserAlreadyExistsError(f"user {username} is already exists!")
 		default_user = await self.users.find_one(filter={"__is_default": True})
-		user_data = type(self).sync_user_data({"username": username, "email": email, "password_hash": bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())}, default_user)
+		user_data = type(self).sync_user_data({"username": username, "email": email, "password_hash": bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")}, default_user)
 		try:
 			await self.users.insert_one(user_data)
 		except pymongo.errors.DuplicateKeyError:
@@ -56,12 +55,11 @@ class DB(AsyncIOMotorClient):
 		new_data = user.__dict__
 		if changed := diff.get("values_changed"):
 			new_data = {".".join(parse_deepdiff_keys(changek)) for changek in changed.keys()}
+		del new_data["_id"]
 		await self.users.update_one({"username": user.username}, {"$set": new_data})
 
 	@staticmethod
-	def sync_user_data(data: dict, default_data: dict, exceptions: Iterable[str]=None) -> dict | None:
-		if exceptions is None:
-			exceptions = ()
+	def sync_user_data(data: dict, default_data: dict) -> dict | None:
 		diff = DeepDiff(data, default_data)
 		if not any(info for info in diff if info in ("dictionary_item_removed", "dictionary_item_added", "type_changes")):
 			return None
@@ -69,12 +67,15 @@ class DB(AsyncIOMotorClient):
 		if added := diff.get("dictionary_item_added"):
 			for add in added:
 				keys = parse_deepdiff_keys(add)
-				if isinstance(keys[-1], str) and keys[-1].startswith("__"):
+				if (isinstance(keys[-1], str) and keys[-1].startswith("__")) or keys[0] == "_id":
 					continue
 				recursively_setvalue_from(new_data, default_data, keys)
 		if removed := diff.get("dictionary_item_removed"):
 			for rem in removed:
-				recursively_removekey(new_data, parse_deepdiff_keys(rem))
+				keys = parse_deepdiff_keys(rem)
+				if keys[0] == "_id":
+					continue
+				recursively_removekey(new_data, keys)
 		if typechanges := diff.get("type_changes"):
 			for tchange in typechanges.keys():
 				keys = parse_deepdiff_keys(tchange)

@@ -16,11 +16,11 @@ server = FastAPI()
 server.mount("/static", StaticFiles(directory="static"), name="static")
 server.add_middleware(SessionMiddleware, secret_key=os.getenv("MIDDLEWARE_SECRET"))
 
-db = DB(os.getenv("MONGO_CONNECTION"))
+db = DB(os.getenv("MONGODB_SECRET"))
 
 def register_routes():
     IndexPage(server=server)
-    LoginPage(server=server)
+    LoginPage(server=server, db=db)
 
 def main():
     register_routes()

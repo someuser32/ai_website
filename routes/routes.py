@@ -18,9 +18,9 @@ class BaseRoute:
 
 		for path, route_info in self.routes.items():
 			if callable(route_info):
-				server.add_api_route(path, endpoint=route_info, methods=("GET",), response_class=HTMLResponse)
+				server.add_api_route(path, endpoint=route_info, name=path, methods=("GET",), response_class=HTMLResponse)
 			else:
-				server.add_api_route(path, endpoint=route_info[0], **route_info[1])
+				server.add_api_route(path, endpoint=route_info[0], **({"name": path} | route_info[1]))
 
 	def init():
 		pass
