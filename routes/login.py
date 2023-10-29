@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import datetime
 import os
 from typing import TYPE_CHECKING
 
@@ -27,6 +28,12 @@ class LoginPage(BaseRoute):
 			"/api/login": (self.api_login, {
 				"methods": ("POST",),
 			}),
+			# "/api/register": (self.api_register, {
+			# 	"methods": ("POST",),
+			# }),
+			"/api/logout": (self.api_logout, {
+				"methods": ("POST",),
+			}),
 		}
 		manager.user_loader()(self._query_login_user)
 
@@ -44,19 +51,25 @@ class LoginPage(BaseRoute):
 		return self.templates.TemplateResponse("login.html", {"request": request, "registration": registration, "captcha": captcha})
 
 	async def logout_page(self, request: Request, redirect_to: str | None=None):
-		return await self.api_logout(request=request, response=RedirectResponse(url=redirect_to or request.url_for("/")))
+		response = await self.api_logout(request=request, response=RedirectResponse(url=redirect_to or request.url_for("/")))
+		response.status_code = 307
+		return response
 
-	async def api_login(self, response: Response, data: OAuth2PasswordRequestForm=Depends()):
+	async def api_login(self, response: Response, data: OAuth2PasswordRequestForm=Depends(), save: int=0):
 		user = await self.db.query_user({"username": data.username})
 		if not user:
 			raise InvalidCredentialsException
 		elif not user.check_password(data.password):
 			raise InvalidCredentialsException
 
-		session_token = manager.create_access_token(data={"sub": user.username})
+		session_token = manager.create_access_token(data={"sub": user.username}, expires=datetime.timedelta(days=14) if save == 1 else datetime.timedelta(hours=2))
 		manager.set_cookie(response, session_token)
 		response.status_code = 200
+		return response
 
+	async def api_register(self, response: Response, username: str, email: str, password: str, captcha: str):
+		# if response.
+		response.status_code = 200
 		return response
 
 	async def api_logout(self, request: Request, response: Response):
@@ -65,6 +78,7 @@ class LoginPage(BaseRoute):
 			raise InvalidCredentialsException
 
 		response.delete_cookie("access-token")
+		response.status_code = 200
 		return response
 
 	async def _query_login_user(self, username: str):

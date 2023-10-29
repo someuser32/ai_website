@@ -1,2 +1,2 @@
 from .db import DB
-from .user import User, UserData, UserSession
+from .user import User, UserData

@@ -1,21 +1,21 @@
 /**
  * @param {string} username
  * @param {string} password
+ * @param {boolean?} save
  * @returns {void}
  */
-function Login(username, password) {
+function Login(username, password, save) {
 	if (username == "" || password == "") {
 		return;
 	};
 	$.post("/api/login", {
 		"username": username,
 		"password": password,
+		"save": save != undefined ? +save : 0,
 	}, function (data, textStatus, jqXHR) {
-		if (data["message"] != undefined) {
-			alert(data["message"]);
-		};
-	}, "json").fail(() => {
-		console.log("fail");
+		location.reload();
+	}).fail(() => {
+		alert("Username or password is incorrect!")
 	});
 };
 
@@ -30,15 +30,14 @@ function Register(username, email, password, captcha) {
 	if (username == "" || email == "" || password == "" || captcha == "") {
 		return;
 	};
-	$.post("/api/login", {
+	$.post("/api/register", {
 		"username": username,
 		"email": email,
 		"password": password,
 		"captcha": captcha,
-		"is_registration": 1,
 	}, function (data, textStatus, jqXHR) {
 		if (data["message"] != undefined) {
 			alert(data["message"]);
 		};
-	}, "json");
+	});
 };

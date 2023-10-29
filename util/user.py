@@ -11,18 +11,11 @@ if TYPE_CHECKING:
 	from .db import DB
 
 
-class UserSession(TypedDict):
-	token: str
-	ip: str
-	last_used: datetime.datetime
-
-
 class UserData(TypedDict):
 	username: str
 	email: str
 	password_hash: str
 	registration_date: datetime.datetime
-	sessions: list[UserSession]
 
 
 class User:
