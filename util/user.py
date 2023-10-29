@@ -1,7 +1,12 @@
-import datetime
-from typing import TypedDict
+from __future__ import annotations
 
-import config
+import datetime
+from typing import TypedDict, TYPE_CHECKING
+
+import util.config as config
+
+if TYPE_CHECKING:
+	from .db import DB
 
 
 class UserSession(TypedDict):
@@ -11,7 +16,6 @@ class UserSession(TypedDict):
 
 
 class UserData(TypedDict):
-	id: int
 	username: str
 	email: str
 	password_hash: str
@@ -21,12 +25,9 @@ class UserData(TypedDict):
 
 
 class User:
-	def __init__(self, data: dict):
+	def __init__(self, data: dict, db: DB):
 		self._data = data
-
-	@property
-	def id(self) -> int:
-		return self._data.get("id", -1)
+		self._persistent_data = data.copy()
 
 	@property
 	def username(self) -> str:
