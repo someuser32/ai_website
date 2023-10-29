@@ -1,0 +1,65 @@
+@import "header/index.css";
+@import "footer/index.css";
+@import "navbuttons.css";
+
+:root {
+	--accent-color: #808080;
+	--accent-color-hover: #353d42;
+	--secondary-accent-color: #fff;
+	--secondary-accent-color-hover: #cdcdcd;
+	--text-accent-color: white;
+	--text-secondary-color: black;
+	--header-background-color: #020c13;
+	--background-main-color: #1f2225;
+	--background-secondary-color: #19181c;
+	--footer-background-color: #020c13;
+}
+
+body {
+	background-color: var(--background-secondary-color);
+	color: white;
+	font-family: 'AR One Sans', sans-serif;
+	margin: 0;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+
+.Container {
+	margin-left: auto;
+	margin-right: auto;
+	width: 70%;
+	padding-left: 30px;
+	padding-right: 30px;
+}
+
+.Container .Row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+table tbody tr td.left {
+	text-align: center;
+}
+
+table tbody tr td *.left {
+	margin-right: auto;
+}
+
+table tbody tr td.center {
+	text-align: center;
+}
+
+table tbody tr td *.center {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+table tbody tr td.right {
+	text-align: right;
+}
+
+table tbody tr td *.right {
+	margin-left: auto;
+}

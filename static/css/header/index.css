@@ -1,0 +1,11 @@
+@import "logo.css";
+@import "login.css";
+
+#Header {
+	width: 100%;
+	position: sticky;
+	background-color: var(--header-background-color);
+	top: 0;
+	padding-top: 8px;
+	padding-bottom: 8px;
+}

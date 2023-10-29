@@ -1,0 +1,24 @@
+#Header .Logo {
+	display: flex;
+	text-decoration: none;
+	color: inherit;
+	max-width: 95px;
+	max-height: 64px;
+}
+
+#Header .Logo #Icon {
+	width: 32px;
+	height: 32px;
+	user-select: none;
+	margin-top: auto;
+	margin-bottom: auto;
+}
+
+#Header .Logo #Text {
+	font-weight: 600;
+	font-size: 24px;
+	margin-left: 10px;
+	user-select: none;
+	text-align: center;
+	display: inline-flex;
+}

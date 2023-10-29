@@ -1,0 +1,11 @@
+@import "login.css";
+
+#Body .Container {
+	padding-top: 50px;
+	padding-bottom: 50px;
+	padding-left: 45px;
+	padding-right: 45px;
+	background-color: var(--background-main-color);
+	margin-top: auto;
+	margin-bottom: auto;
+}

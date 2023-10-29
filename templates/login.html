@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="{{url_for('static', path='/css/styles.css')}}" type="text/css">
+		<link rel="stylesheet" href="{{url_for('static', path='/css/login/index.css')}}" type="text/css">
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=AR+One+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+		<script rel="stylesheet" href="{{url_for('static', path='/scripts/lib/jquery.js')}}"></script>
+		<title>Login - Not a Google</title>
+	</head>
+	<body>
+		{% include "blocks/header.html" %}
+		<div id="Body">
+			<div class="Container">
+				<div class="Row">
+					{% if registration == 1 %}
+						{% include "widgets/register.html" %}
+					{% else %}
+						{% include "widgets/login.html" %}
+					{% endif %}
+				</div>
+			</div>
+		</div>
+		{% include "blocks/footer.html" %}
+	</body>
+</html>

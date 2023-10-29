@@ -1,0 +1,36 @@
+#Header #LoginButtons {
+	display: flex;
+	justify-content: space-between;
+}
+
+#Header #LoginButtons .LoginRegister:not(:first-child) {
+	margin-left: 15px;
+}
+
+#Header #LoginButtons .LoginRegister {
+	padding-top: 6px;
+	padding-bottom: 6px;
+	padding-left: 10px;
+	padding-right: 10px;
+	background-color: #00000000;
+	border: 2px solid var(--accent-color);
+	color: inherit;
+	cursor: pointer;
+	text-decoration: none;
+	font-size: 15px;
+}
+
+#Header #LoginButtons #Register.LoginRegister {
+	border: 2px solid var(--secondary-accent-color);
+	background-color: var(--secondary-accent-color);
+	color: var(--text-secondary-color);
+}
+
+#Header #LoginButtons .LoginRegister:hover {
+	background-color: var(--accent-color-hover);
+}
+
+#Header #LoginButtons #Register.LoginRegister:hover {
+	border: 2px solid var(--secondary-accent-color-hover);
+	background-color: var(--secondary-accent-color-hover);
+}
