@@ -19,6 +19,7 @@ server.add_middleware(SessionMiddleware, secret_key=os.getenv("MIDDLEWARE_SECRET
 db = DB(os.getenv("MONGODB_SECRET"))
 
 def register_routes():
+    API(server=server, db=db)
     IndexPage(server=server)
     LoginPage(server=server, db=db)
 

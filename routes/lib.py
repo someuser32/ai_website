@@ -15,7 +15,9 @@ def generate_captcha(request: Request, width: int, height: int) -> tuple[str, st
 	return (text, captcha)
 
 def check_captcha(request: Request, answer: str) -> bool:
-	valid = request.session.get("captcha") == answer
-	if "captcha" in request.session:
+	if "captcha" not in request.session:
+		return False
+	valid = request.session.get("captcha", "").lower() == answer.lower()
+	if valid:
 		del request.session["captcha"]
 	return valid

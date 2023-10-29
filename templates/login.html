@@ -7,8 +7,13 @@
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=AR+One+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 		<script src="{{url_for('static', path='/scripts/lib/jquery.js')}}"></script>
+		<script src="{{url_for('static', path='/scripts/lib/util.js')}}"></script>
 		<script src="{{url_for('static', path='/scripts/login/index.js')}}"></script>
-		<title>Login - Not a Google</title>
+		{% if registration == 1 %}
+			<title>Register - Not a Google</title>
+		{% else %}
+			<title>Login - Not a Google</title>
+		{% endif %}
 	</head>
 	<body>
 		{% include "blocks/header.html" %}

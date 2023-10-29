@@ -8,15 +8,31 @@ function Login(username, password, save) {
 	if (username == "" || password == "") {
 		return;
 	};
-	$.post("/api/login", {
+	const xhr = new XMLHttpRequest();
+	xhr.open("POST", "/api/login", true);
+	xhr.setRequestHeader("Content-Type", "application/json");
+	xhr.onreadystatechange = (event) => {
+		if (xhr.readyState != 4) {
+			return;
+		};
+		switch (xhr.status) {
+			case 200:
+				location.reload();
+				break;
+
+			case 403:
+				alert(xhr.responseText["detail"]);
+				break;
+
+			default:
+				break;
+		};
+	};
+	xhr.send(JSON.stringify({
 		"username": username,
 		"password": password,
 		"save": save != undefined ? +save : 0,
-	}, function (data, textStatus, jqXHR) {
-		location.reload();
-	}).fail(() => {
-		alert("Username or password is incorrect!")
-	});
+	}));
 };
 
 /**
@@ -28,16 +44,61 @@ function Login(username, password, save) {
  */
 function Register(username, email, password, captcha) {
 	if (username == "" || email == "" || password == "" || captcha == "") {
+		alert("You are missed required fields!");
 		return;
 	};
-	$.post("/api/register", {
+	if (!IsEmailValid(email)) {
+		alert("Invalid email!");
+		return;
+	};
+	const xhr = new XMLHttpRequest();
+	xhr.open("POST", "/api/register", true);
+	xhr.setRequestHeader("Content-Type", "application/json");
+	xhr.onreadystatechange = (event) => {
+		if (xhr.readyState != 4) {
+			return;
+		};
+		switch (xhr.status) {
+			case 200:
+				location.reload();
+				break;
+
+			case 400:
+				alert(JSON.parse(xhr.responseText)["detail"]);
+				RefreshCaptcha();
+				break;
+
+			default:
+				break;
+		};
+	};
+	xhr.send(JSON.stringify({
 		"username": username,
 		"email": email,
 		"password": password,
 		"captcha": captcha,
-	}, function (data, textStatus, jqXHR) {
-		if (data["message"] != undefined) {
-			alert(data["message"]);
+	}));
+};
+
+/**
+ * @returns {void}
+ */
+function RefreshCaptcha() {
+	const xhr = new XMLHttpRequest();
+	xhr.open("POST", "/api/refresh_captcha", true);
+	xhr.setRequestHeader("Content-Type", "application/text");
+	xhr.onreadystatechange = (event) => {
+		if (xhr.readyState != 4) {
+			return;
 		};
-	});
+		switch (xhr.status) {
+			case 200:
+				document.getElementsByName("captcha-img")[0].src = xhr.responseText;
+				break;
+
+			default:
+				break;
+		};
+	};
+	xhr.send(JSON.stringify({}));
 };

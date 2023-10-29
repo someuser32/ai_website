@@ -2,22 +2,35 @@ from __future__ import annotations
 
 import datetime
 import os
+from contextlib import suppress as except_error
 from typing import TYPE_CHECKING
 
+from email_validator import validate_email, EmailNotValidError
 from fastapi import Request, Depends, Response
+from fastapi.exceptions import HTTPException
 from fastapi.responses import RedirectResponse
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi_login import LoginManager
 from fastapi_login.exceptions import InvalidCredentialsException
+from pydantic import BaseModel
 
 from .routes import BaseRoute
 from .lib import generate_captcha, check_captcha
+from .exceptions import IncorrectCaptchaException, UsernameExistsException
 
 if TYPE_CHECKING:
 	from ..util import DB, User
 
 
 manager = LoginManager(os.getenv("LOGIN_SECRET"), "/api/login", use_cookie=True)
+
+
+class RegisterModel(BaseModel):
+	username: str
+	email: str
+	password: str
+	captcha: str
+
 
 class LoginPage(BaseRoute):
 	def init(self):
@@ -28,9 +41,9 @@ class LoginPage(BaseRoute):
 			"/api/login": (self.api_login, {
 				"methods": ("POST",),
 			}),
-			# "/api/register": (self.api_register, {
-			# 	"methods": ("POST",),
-			# }),
+			"/api/register": (self.api_register, {
+				"methods": ("POST",),
+			}),
 			"/api/logout": (self.api_logout, {
 				"methods": ("POST",),
 			}),
@@ -44,7 +57,7 @@ class LoginPage(BaseRoute):
 	async def login_page(self, request: Request, registration: int | None=0, utm_source: str | None=None):
 		user = request.state.user
 		if user is not None:
-			return RedirectResponse(request.url_for("/"))
+			return RedirectResponse(request.url_for("/", utm_source="login"))
 		captcha = None
 		if registration == 1:
 			text, captcha = generate_captcha(request=request, width=400, height=100)
@@ -67,8 +80,25 @@ class LoginPage(BaseRoute):
 		response.status_code = 200
 		return response
 
-	async def api_register(self, response: Response, username: str, email: str, password: str, captcha: str):
-		# if response.
+	async def api_register(self, request: Request, response: Response, creditionals: RegisterModel):
+		if not check_captcha(request, creditionals.captcha):
+			raise IncorrectCaptchaException
+
+		user = await self.db.query_user({"username": creditionals.username})
+		if user is not None:
+			raise UsernameExistsException
+
+		try:
+			emailinfo = validate_email(creditionals.email, check_deliverability=False)
+			email = emailinfo.normalized
+		except EmailNotValidError as e:
+			raise HTTPException(status_code=400, detail=e.args[0], headers={"WWW-Authenticate": "Bearer"})
+
+		user = await self.db.create_user(creditionals.username, email, creditionals.password)
+
+		with except_error(InvalidCredentialsException):
+			response = await self.api_login(response=response, data=OAuth2PasswordRequestForm(username=creditionals.username, password=creditionals.password), save=1)
+
 		response.status_code = 200
 		return response
 
