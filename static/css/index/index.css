@@ -1,6 +1,6 @@
 #Body .Container {
-	padding-top: 50px;
-	padding-bottom: 50px;
+	padding-top: 10px;
+	padding-bottom: 25px;
 	padding-left: 45px;
 	padding-right: 45px;
 	background-color: var(--background-main-color);
@@ -14,4 +14,20 @@
 
 #Body .Container .Row .Image {
 	max-width: 50%;
+}
+
+@media only screen and (max-width: 992px) {
+	#Body .Container .Row *:not(:first-child) {
+		margin-top: 25px;
+	}
+
+	#Body .Container .Row *:last-child {
+		margin-left: 0px;
+	}
+
+	#Body .Container .Row .Image {
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
+	}
 }

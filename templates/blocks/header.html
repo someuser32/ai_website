@@ -9,7 +9,7 @@
 							<img id="Icon" src="/favicon.ico" alt="logo" />
 							<span id="Text">Am I Robot</span>
 						</a>
-						<div id="NavButtons" class="NavButtons horizontal">
+						<div id="NavButtons" class="NavButtons horizontal desktop-only">
 							<ul>
 								<li class="link">
 									<a href="/?utm_source=navbuttons">
@@ -31,22 +31,27 @@
 								</li>
 							</ul>
 						</div>
-						{% if request.state.user %}
-							<div id="AccountButtons">
-								<a id="Account" class="Account" href="/profile">
-									<div>{{ request.state.user.username }}</div>
-									<div class="underline"></div>
-								</a>
-								<a id="Logout" class="Account" onclick="location.replace('/logout')">
-									<svg xmlns="http://www.w3.org/2000/svg" height="26" viewBox="0 -960 960 960" width="48"><path fill="white" d="M180-120q-24 0-42-18t-18-42v-600q0-24 18-42t42-18h299v60H180v600h299v60H180Zm486-185-43-43 102-102H360v-60h363L621-612l43-43 176 176-174 174Z"/></svg>
-								</a>
-							</div>
-						{% else %}
-							<div id="LoginButtons">
-								<a id="Register" class="LoginRegister" href="/login?registration=1">Sign Up</a>
-								<a id="Login" class="LoginRegister" href="/login">Login</a>
-							</div>
-						{% endif %}
+						<div id="SideMenuOpen" class="mobile-only">
+							<svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 -960 960 960" width="38"><path fill="white" d="M125-244v-57.5h710v57.5H125Zm0-207.5V-509h710v57.5H125Zm0-207.5v-57.5h710v57.5H125Z"/></svg>
+						</div>
+						<div class="desktop-only">
+							{% if request.state.user %}
+								<div id="AccountButtons">
+									<a id="Account" class="Account" href="/profile">
+										<div>{{ request.state.user.username }}</div>
+										<div class="underline"></div>
+									</a>
+									<a id="Logout" class="Account" onclick="location.replace('/logout')">
+										<svg xmlns="http://www.w3.org/2000/svg" height="26" viewBox="0 -960 960 960" width="48"><path fill="white" d="M180-120q-24 0-42-18t-18-42v-600q0-24 18-42t42-18h299v60H180v600h299v60H180Zm486-185-43-43 102-102H360v-60h363L621-612l43-43 176 176-174 174Z"/></svg>
+									</a>
+								</div>
+							{% else %}
+								<div id="LoginButtons">
+									<a id="Register" class="LoginRegister" href="/login?registration=1">Sign Up</a>
+									<a id="Login" class="LoginRegister" href="/login">Login</a>
+								</div>
+							{% endif %}
+						</div>
 					</div>
 				</div>
 			</div>

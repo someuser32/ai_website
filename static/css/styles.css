@@ -39,6 +39,12 @@ body {
 	justify-content: space-between;
 }
 
+@media only screen and (max-width: 992px) {
+	#Body .Container .Row {
+		display: block;
+	}
+}
+
 table tbody tr td.left {
 	text-align: center;
 }
@@ -62,4 +68,15 @@ table tbody tr td.right {
 
 table tbody tr td *.right {
 	margin-left: auto;
+}
+
+@media only screen and (max-width: 992px) {
+	.mobile-only {
+		display: block;
+		width: fit-content;
+	}
+
+	.desktop-only {
+		display: none;
+	}
 }
