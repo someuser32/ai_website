@@ -1,0 +1,19 @@
+@import "../index/index.css";
+
+#Body .Container {
+	display: grid;
+}
+
+#Body .Container .Row {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-evenly;
+}
+
+#Body .Container .Row *:last-child {
+	margin-left: 0px;
+}
+
+.ToolsList ul {
+	list-style-type: disc;
+}

@@ -23,6 +23,7 @@ def register_routes():
     IndexPage(server=server)
     LoginPage(server=server, db=db)
     ProfilePage(server=server)
+    ToolsPage(server=server)
 
 def main():
     register_routes()

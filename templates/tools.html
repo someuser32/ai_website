@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="{{url_for('static', path='/css/styles.css')}}" type="text/css">
+		<link rel="stylesheet" href="{{ url_for('static', path='/css' ~ request.path ~ '/index.css') }}" type="text/css">
+		<link rel="stylesheet" href="{{url_for('static', path='/css/styles_override.css')}}" type="text/css">
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=AR+One+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+		<script src="{{url_for('static', path='/scripts/lib/jquery.js')}}"></script>
+		<script src="{{url_for('static', path='/scripts/lib/util.js')}}"></script>
+		<title>Am I Robot</title>
+	</head>
+	<body>
+		{% include "blocks/header.html" %}
+		<div id="Body">
+			<div class="Container">
+				<div class="Row">
+					<div id="ChatTools" class="NavButtons vertical ToolsList">
+						<a class="Title">Chat Tools</a>
+						<ul>
+							<li class="link">
+								<a href="/tools/chatgpt-3.5">
+									<div>ChatGPT 3.5</div>
+									<div class="underline"></div>
+								</a>
+							</li>
+							<li class="link">
+								<a href="/tools/chatgpt-4">
+									<div>ChatGPT 4</div>
+									<div class="underline"></div>
+								</a>
+							</li>
+						</ul>
+					</div>
+					<div id="ImageTools" class="NavButtons vertical ToolsList">
+						<a class="Title">Image Tools</a>
+						<ul>
+							<li class="link">
+								<a href="/tools/upscaler">
+									<div>Upscaler</div>
+									<div class="underline"></div>
+								</a>
+							</li>
+							<li class="link">
+								<a href="/tools/color-correction">
+									<div>Color correction</div>
+									<div class="underline"></div>
+								</a>
+							</li>
+							<li class="link">
+								<a href="/tools/sketch-maker">
+									<div>Sketch maker</div>
+									<div class="underline"></div>
+								</a>
+							</li>
+						</ul>
+					</div>
+					<div id="AudioTools" class="NavButtons vertical ToolsList">
+						<a class="Title">Audio Tools</a>
+						<ul>
+							<li class="link">
+								<a href="/tools/tts">
+									<div>Text-to-Speech</div>
+									<div class="underline"></div>
+								</a>
+							</li>
+							<li class="link">
+								<a href="/tools/stt">
+									<div>Speech-to-Text</div>
+									<div class="underline"></div>
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% include "blocks/footer.html" %}
+	</body>
+</html>

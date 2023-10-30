@@ -69,14 +69,3 @@ table tbody tr td.right {
 table tbody tr td *.right {
 	margin-left: auto;
 }
-
-@media only screen and (max-width: 992px) {
-	.mobile-only {
-		display: block;
-		width: fit-content;
-	}
-
-	.desktop-only {
-		display: none;
-	}
-}
