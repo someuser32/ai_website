@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "ai website"
+name = "Am I robot"
 version = "0.1.0"
 description = "Project for infomatrix.asia 2023 tournament"
 authors = ["someuser"]
