@@ -29,4 +29,4 @@ MONGODB_CONNECTION=put your MongoDB conection here
 | `DB_NAME` | Name of your database from MongoDB | `infomatrix` |
 | `MIDDLEWARE_SECRET` | Secret key for middleware | `aR2xJWfgNb15R7FplXtxywDGwGIBjpm0` |
 | `LOGIN_SECRET` | Secret key for fastapi-login Login Manager | `nMtq2UHYFJxCLYOzN4BXb3bI89sy5RFd` |
-| `MONGODB_CONNECTION` | Secret key for fastapi-login Login Manager | `mongodb://USERNAME:PASSWORD@IP:PORT` |
+| `MONGODB_CONNECTION` | Your string connection from MongoDB | `mongodb://USERNAME:PASSWORD@IP:PORT` |
