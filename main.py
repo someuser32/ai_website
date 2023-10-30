@@ -8,9 +8,8 @@ from starlette.middleware.sessions import SessionMiddleware
 
 load_dotenv(".env")
 
-from util import DB
 from routes import *
-
+from util import DB
 
 server = FastAPI()
 server.mount("/static", StaticFiles(directory="static"), name="static")

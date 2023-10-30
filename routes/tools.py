@@ -1,6 +1,6 @@
 from contextlib import suppress as except_error
 
-from fastapi import Request, Depends, Response, Body
+from fastapi import Body, Depends, Request, Response
 from fastapi.responses import RedirectResponse
 
 from .routes import BaseRoute

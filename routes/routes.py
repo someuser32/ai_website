@@ -1,8 +1,9 @@
-from typing import Iterable, Callable, Coroutine, Any
+from typing import Any, Callable, Coroutine, Iterable
 
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+
 
 class BaseRoute:
 	def __init__(self, server: FastAPI, **kwargs):

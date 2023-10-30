@@ -5,8 +5,8 @@ import os
 from contextlib import suppress as except_error
 from typing import TYPE_CHECKING
 
-from email_validator import validate_email, EmailNotValidError
-from fastapi import Request, Depends, Response, Body
+from email_validator import EmailNotValidError, validate_email
+from fastapi import Body, Depends, Request, Response
 from fastapi.exceptions import HTTPException
 from fastapi.responses import RedirectResponse
 from fastapi.security import OAuth2PasswordRequestForm
@@ -14,9 +14,9 @@ from fastapi_login import LoginManager
 from fastapi_login.exceptions import InvalidCredentialsException
 from pydantic import BaseModel
 
-from .routes import BaseRoute
-from .lib import generate_captcha, check_captcha
 from .exceptions import IncorrectCaptchaException, UsernameExistsException
+from .lib import check_captcha, generate_captcha
+from .routes import BaseRoute
 
 if TYPE_CHECKING:
 	from ..util import DB, User

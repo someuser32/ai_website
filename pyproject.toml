@@ -23,6 +23,12 @@ bcrypt = "^4.0.1"
 python-multipart = "^0.0.6"
 email-validator = "^2.1.0.post1"
 g4f = "^0.1.7.9"
+pillow = "^10.1.0"
+opencv-python = "^4.8.1.78"
+
+[tool.isort]
+profile = "black"
+skip_glob = "^(venv)"
 
 
 [build-system]

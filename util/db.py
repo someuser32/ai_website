@@ -1,7 +1,7 @@
 import datetime
 import os
 from contextlib import suppress as except_error
-from typing import Iterable, Any
+from typing import Any, Iterable
 
 import bcrypt
 import pymongo.errors
@@ -11,9 +11,10 @@ from motor.core import AgnosticCollection, AgnosticDatabase
 from motor.motor_asyncio import AsyncIOMotorClient
 
 import util.config as config
-from .user import User
-from .lib import parse_deepdiff_keys, recursively_setvalue_from, recursively_removekey, recursively_setvalue, recursively_getvalue, safe_typecast
+
 from .exceptions import UserAlreadyExistsError
+from .lib import parse_deepdiff_keys, recursively_getvalue, recursively_removekey, recursively_setvalue, recursively_setvalue_from, safe_typecast
+from .user import User
 
 
 class DB(AsyncIOMotorClient):

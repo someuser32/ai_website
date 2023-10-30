@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import datetime
-from typing import TypedDict, TYPE_CHECKING
+from typing import TYPE_CHECKING, TypedDict
 
 import bcrypt
 

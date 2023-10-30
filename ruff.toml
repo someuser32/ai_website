@@ -1,0 +1,4 @@
+line-length = 120
+
+[per-file-ignores]
+"main.py" = ["E402", "F405"]

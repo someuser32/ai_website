@@ -4,11 +4,11 @@ import datetime
 from contextlib import suppress as except_error
 from typing import TYPE_CHECKING
 
-from fastapi import Request, Depends, Response
+from fastapi import Depends, Request, Response
 from fastapi.responses import PlainTextResponse
 
-from .routes import BaseRoute
 from .lib import generate_captcha
+from .routes import BaseRoute
 
 if TYPE_CHECKING:
 	from util import DB

@@ -3,6 +3,7 @@ from fastapi.responses import FileResponse
 
 from .routes import BaseRoute
 
+
 class IndexPage(BaseRoute):
 	def init(self):
 		self.routes = {
