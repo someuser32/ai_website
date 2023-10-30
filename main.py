@@ -22,6 +22,7 @@ def register_routes():
     API(server=server, db=db)
     IndexPage(server=server)
     LoginPage(server=server, db=db)
+    ProfilePage(server=server)
 
 def main():
     register_routes()

@@ -5,9 +5,6 @@
  * @returns {void}
  */
 function Login(username, password, save) {
-	if (username == "" || password == "") {
-		return;
-	};
 	const xhr = new XMLHttpRequest();
 	xhr.open("POST", "/api/login", true);
 	xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -20,8 +17,8 @@ function Login(username, password, save) {
 				location.reload();
 				break;
 
-			case 403:
-				alert(xhr.responseText["detail"]);
+			case 401:
+				alert(JSON.parse(xhr.responseText)["detail"]);
 				break;
 
 			default:
@@ -33,6 +30,7 @@ function Login(username, password, save) {
 		"password": password,
 		"save": save != undefined ? +save : 0,
 	}));
+	return true;
 };
 
 /**
@@ -43,14 +41,6 @@ function Login(username, password, save) {
  * @returns {void}
  */
 function Register(username, email, password, captcha) {
-	if (username == "" || email == "" || password == "" || captcha == "") {
-		alert("You are missed required fields!");
-		return;
-	};
-	if (!IsEmailValid(email)) {
-		alert("Invalid email!");
-		return;
-	};
 	const xhr = new XMLHttpRequest();
 	xhr.open("POST", "/api/register", true);
 	xhr.setRequestHeader("Content-Type", "application/json");
@@ -64,8 +54,8 @@ function Register(username, email, password, captcha) {
 				break;
 
 			case 400:
-				alert(JSON.parse(xhr.responseText)["detail"]);
 				RefreshCaptcha();
+				alert(JSON.parse(xhr.responseText)["detail"]);
 				break;
 
 			default:
@@ -78,6 +68,7 @@ function Register(username, email, password, captcha) {
 		"password": password,
 		"captcha": captcha,
 	}));
+	return true;
 };
 
 /**

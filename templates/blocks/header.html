@@ -18,13 +18,13 @@
 									</a>
 								</li>
 								<li class="link">
-									<a href="/catalog?utm_source=navbuttons">
+									<a href="/catalog">
 										<div>Catalog</div>
 										<div class="underline"></div>
 									</a>
 								</li>
 								<li class="link">
-									<a href="/pricing?utm_source=navbuttons">
+									<a href="/pricing">
 										<div>Pricing</div>
 										<div class="underline"></div>
 									</a>
@@ -33,7 +33,7 @@
 						</div>
 						{% if request.state.user %}
 							<div id="AccountButtons">
-								<a id="Account" class="Account" href="/profile?utm_source=navbuttons">
+								<a id="Account" class="Account" href="/profile">
 									<div>{{ request.state.user.username }}</div>
 									<div class="underline"></div>
 								</a>
@@ -43,8 +43,8 @@
 							</div>
 						{% else %}
 							<div id="LoginButtons">
-								<a id="Register" class="LoginRegister" href="/login?utm_source=navbuttons&registration=1">Sign Up</a>
-								<a id="Login" class="LoginRegister" href="/login?utm_source=navbuttons">Login</a>
+								<a id="Register" class="LoginRegister" href="/login?registration=1">Sign Up</a>
+								<a id="Login" class="LoginRegister" href="/login">Login</a>
 							</div>
 						{% endif %}
 					</div>
