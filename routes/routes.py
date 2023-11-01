@@ -1,6 +1,6 @@
-from typing import Any, Callable, Coroutine, Iterable
+from typing import Any, Callable, Coroutine, Sequence
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
@@ -13,7 +13,9 @@ class BaseRoute:
 		for key, value in kwargs.items():
 			setattr(self, f"_{key}", value)
 
-		self.routes : dict[str, Callable[..., Coroutine] | Iterable[Callable[..., Coroutine], dict[str, Any]]] = {}
+		self.routes : dict[str, Callable[..., Coroutine] | Sequence[Callable[..., Coroutine], dict[str, Any]]] = {}
+
+		self.websockets : dict[str, Callable[..., Coroutine] | Sequence[Callable[..., Coroutine], Sequence[Depends]]] = {}
 
 		self.init()
 
@@ -22,6 +24,12 @@ class BaseRoute:
 				server.add_api_route(path, endpoint=route_info, name=path, methods=("GET",), response_class=HTMLResponse)
 			else:
 				server.add_api_route(path, endpoint=route_info[0], **({"name": path} | route_info[1]))
+
+		for path, route_info in self.websockets.items():
+			if callable(route_info):
+				server.add_api_websocket_route(path, endpoint=route_info, name=path)
+			else:
+				server.add_api_websocket_route(path, endpoint=route_info[0], name=path, dependencies=route_info[1])
 
 	def init():
 		pass

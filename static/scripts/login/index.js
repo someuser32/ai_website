@@ -19,6 +19,7 @@ function Login(username, password, save) {
 
 			case 401:
 				alert(JSON.parse(xhr.responseText)["detail"]);
+				document.getElementsByName("submit")[0].disabled = false;
 				break;
 
 			default:
@@ -30,6 +31,7 @@ function Login(username, password, save) {
 		"password": password,
 		"save": save != undefined ? +save : 0,
 	}));
+	document.getElementsByName("submit")[0].disabled = true;
 	return true;
 };
 
@@ -56,6 +58,7 @@ function Register(username, email, password, captcha) {
 			case 400:
 				RefreshCaptcha();
 				alert(JSON.parse(xhr.responseText)["detail"]);
+				document.getElementsByName("submit")[0].disabled = false;
 				break;
 
 			default:
@@ -68,6 +71,7 @@ function Register(username, email, password, captcha) {
 		"password": password,
 		"captcha": captcha,
 	}));
+	document.getElementsByName("submit")[0].disabled = true;
 	return true;
 };
 

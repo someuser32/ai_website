@@ -1,4 +1,7 @@
 *.env
 venv
+venv-dev
 __pycache__
 .ruff_cache
+dev
+routes/tools_util/upscaler/weights/*.pth

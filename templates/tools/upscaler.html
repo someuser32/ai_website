@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css') }}" type="text/css">
+		<link rel="stylesheet" href="{{ url_for('static', path='/css' ~ request.path ~ '/index.css') }}" type="text/css">
+		<link rel="stylesheet" href="{{ url_for('static', path='/css/styles_override.css') }}" type="text/css">
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=AR+One+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+		<script src="{{ url_for('static', path='/scripts/lib/jquery.js') }}"></script>
+		<script src="{{ url_for('static', path='/scripts/lib/util.js') }}"></script>
+		<script src="{{ url_for('static', path='/scripts/tools/upscaler/index.js') }}"></script>
+		<title>Upscaler - Am I Robot</title>
+	</head>
+	<body>
+		{% include "blocks/header.html" %}
+		<div id="Body">
+			<div class="Container">
+				<div class="Row">
+					<form class="UpscalerForm" onsubmit="Upscale(document.getElementsByName('file')[0].files[0], parseInt(document.getElementsByName('scale')[0].value), document.getElementsByName('model')[0].value); return false;">
+						<table>
+							<tbody>
+								<tr class="File">
+									<td>Image:</td>
+									<td><input name="file" type="file" required></td>
+								</tr>
+								<tr class="Scale">
+									<td>Scale:</td>
+									<td>
+										<label><input name="scale" type="radio" required value="2">2</label>
+										<label><input name="scale" type="radio" required value="4">4</label>
+									</td>
+								</tr>
+								<tr class="Model">
+									<td class="top">Model:</td>
+									<td>
+										<ul>
+											{% for model_name in models %}
+											<li><label><input name="model" type="radio" required value="{{ model_name }}">{{ model_name }}</label></li>
+											{% endfor %}
+										</ul>
+									</td>
+								</tr>
+								<tr class="Submit">
+									<td></td>
+									<td><input name="submit" type="submit" class="right" value="Upscale"></td>
+								</tr>
+							</tbody>
+						</table>
+					</form>
+				</div>
+				<div class="Row">
+					<img id="UpscaledImage" name="upscaled-image" alt="image will appear here" />
+				</div>
+			</div>
+		</div>
+		{% include "blocks/footer.html" %}
+	</body>
+</html>

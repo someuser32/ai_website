@@ -1,11 +1,12 @@
 # Am I robot? | AIr
 
-[Description](https://github.com/someuser32/ai_website/blob/main/pyproject.toml)
+[Description](/pyproject.toml)
 
 # Environment
 
 ## Dependencies
 Dependencies are in pyproject.toml
+(also in [install_requirements.bat](/install_requirements.bat)/[install_requirements.sh](/install_requirements.sh) file: `torch` `torchvision` `torchaudio` `realesrgan`)
 
 ## Environment
 Tested on Python 3.11.4 / Windows 11, but should work on >= Python 3.10 and other OS
@@ -29,4 +30,4 @@ MONGODB_CONNECTION=put your MongoDB conection here
 | `DB_NAME` | Name of your database from MongoDB | `infomatrix` |
 | `MIDDLEWARE_SECRET` | Secret key for middleware | `aR2xJWfgNb15R7FplXtxywDGwGIBjpm0` |
 | `LOGIN_SECRET` | Secret key for fastapi-login Login Manager | `nMtq2UHYFJxCLYOzN4BXb3bI89sy5RFd` |
-| `MONGODB_CONNECTION` | Your string connection from MongoDB | `mongodb://USERNAME:PASSWORD@IP:PORT` |
+| `MONGODB_CONNECTION` | Connection string from MongoDB | `mongodb://USERNAME:PASSWORD@IP:PORT` |

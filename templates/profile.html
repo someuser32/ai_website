@@ -6,15 +6,15 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<link rel="stylesheet" href="{{url_for('static', path='/css/styles.css')}}" type="text/css">
+		<link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css') }}" type="text/css">
 		<link rel="stylesheet" href="{{ url_for('static', path='/css' ~ request.path ~ '/index.css') }}" type="text/css">
-		<link rel="stylesheet" href="{{url_for('static', path='/css/styles_override.css')}}" type="text/css">
+		<link rel="stylesheet" href="{{ url_for('static', path='/css/styles_override.css') }}" type="text/css">
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=AR+One+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-		<script src="{{url_for('static', path='/scripts/lib/jquery.js')}}"></script>
-		<script src="{{url_for('static', path='/scripts/lib/util.js')}}"></script>
-		<title>Am I Robot</title>
+		<script src="{{ url_for('static', path='/scripts/lib/jquery.js') }}"></script>
+		<script src="{{ url_for('static', path='/scripts/lib/util.js') }}"></script>
+		<title>Profile - Am I Robot</title>
 	</head>
 	<body>
 		{% include "blocks/header.html" %}
