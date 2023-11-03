@@ -9,10 +9,13 @@
 	--secondary-accent-color-hover: #cdcdcd;
 	--text-accent-color: white;
 	--text-secondary-color: black;
+	--text-placeholder-color: #a9a9a9;
 	--header-background-color: #020c13;
 	--background-main-color: #1f2225;
 	--background-secondary-color: #19181c;
 	--footer-background-color: #020c13;
+
+	--gray-color: #333;
 }
 
 body {
@@ -39,12 +42,6 @@ body {
 	justify-content: space-between;
 }
 
-@media only screen and (max-width: 992px) {
-	#Body .Container .Row {
-		display: block;
-	}
-}
-
 table tbody tr td.left {
 	text-align: center;
 }
@@ -68,4 +65,48 @@ table tbody tr td.right {
 
 table tbody tr td *.right {
 	margin-left: auto;
+}
+
+.LoadingSpinner {
+	animation: SpinnerRotate 2s linear infinite;
+	z-index: 2;
+	width: 50px;
+	height: 50px;
+	display: none;
+	position: absolute;
+}
+
+*.Loading .NotLoading {
+	display: none;
+}
+
+*.Loading .LoadingSpinner {
+	display: block;
+}
+
+.LoadingSpinner .path {
+	stroke: white;
+	stroke-linecap: round;
+	animation: SpinnerDash 1.5s ease-in-out infinite;
+}
+
+@keyframes SpinnerRotate {
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes SpinnerDash {
+	0% {
+		stroke-dasharray: 1, 150;
+		stroke-dashoffset: 0;
+	}
+	50% {
+		stroke-dasharray: 90, 150;
+		stroke-dashoffset: -35;
+	}
+	100% {
+		stroke-dasharray: 90, 150;
+		stroke-dashoffset: -124;
+	}
 }

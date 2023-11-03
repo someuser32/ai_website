@@ -1,0 +1,37 @@
+#Body .Container .ImageBox {
+	width: 300px;
+	height: 200px;
+	border: 1px dashed white;
+	border-radius: 2px;
+	background-color: var(--gray-color);
+	position: relative;
+	justify-content: center;
+	align-items: center;
+	display: flex;
+}
+
+#Body .Container .ImageBox.Clickable {
+	cursor: pointer;
+}
+
+#Body .Container .ImageBox a:first-of-type {
+	position: absolute;
+	top: 46%;
+	width: 100%;
+	text-align: center;
+	color: var(--text-placeholder-color);
+	user-select: none;
+}
+
+#Body .Container .ImageBox.HasImage a:first-of-type {
+	display: none;
+}
+
+#Body .Container .ImageBox:not(.HasImage) img {
+	display: none;
+}
+
+#Body .Container .ImageBox img {
+	max-width: -webkit-fill-available;
+	max-height: -webkit-fill-available;
+}

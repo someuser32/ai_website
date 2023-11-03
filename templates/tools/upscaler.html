@@ -17,12 +17,14 @@
 		<div id="Body">
 			<div class="Container">
 				<div class="Row">
-					<form class="UpscalerForm" onsubmit="Upscale(document.getElementsByName('file')[0].files[0], parseInt(document.getElementsByName('scale')[0].value), document.getElementsByName('model')[0].value); return false;">
+					<form class="UpscalerForm" onsubmit="Upscale(document.getElementsByName('input-image')[0].uploaded_files[0], parseInt(document.getElementsByName('scale')[0].value), document.getElementsByName('model')[0].value); return false;">
 						<table>
 							<tbody>
 								<tr class="File">
-									<td>Image:</td>
-									<td><input name="file" type="file" required></td>
+									<div id="InputFile" class="ImageBox Clickable" name="input-image" onclick="FileClick(this, ['image/png', '.jpg', '.jpeg'], ImageFiles)" ondrop="FileDrop(this, ['png', 'jpeg', 'jpg'], event, ImageFiles);" ondragover="event.preventDefault();" required>
+										<a>Choose image</a>
+										<img/>
+									</div>
 								</tr>
 								<tr class="Scale">
 									<td>Scale:</td>
@@ -36,7 +38,7 @@
 									<td>
 										<ul>
 											{% for model_name in models %}
-											<li><label><input name="model" type="radio" required value="{{ model_name }}">{{ model_name }}</label></li>
+												<li><label><input name="model" type="radio" required value="{{ model_name }}">{{ model_name }}</label></li>
 											{% endfor %}
 										</ul>
 									</td>
@@ -50,7 +52,13 @@
 					</form>
 				</div>
 				<div class="Row">
-					<img id="UpscaledImage" name="upscaled-image" alt="image will appear here" />
+					<div id="UpscaledImage" class="ImageBox">
+						<img class="OnlyLoaded" name="upscaled-image" alt="upscaled" />
+						<a class="OnlyNotLoaded NotLoading">Upscaled image</a>
+						<svg class="LoadingSpinner" viewBox="0 0 50 50">
+							<circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5" />
+						</svg>
+					</div>
 				</div>
 			</div>
 		</div>

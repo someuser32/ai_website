@@ -43,7 +43,12 @@ class ToolsPage(BaseRoute):
 		await websocket.accept()
 
 		img = await websocket.receive_bytes()
-		await websocket.send_text("Waiting for json input...")
+		image = PIL.Image.open(io.BytesIO(img))
+		if (image.size[0] * image.size[1]) > (800*800):
+			await websocket.send_json({"status": "error", "reason": f"cannot process image greater than {800*800} pixels! (> ~800*800)"})
+			return await websocket.close()
+
+		await websocket.send_json({"status": "success"})
 
 		data = await websocket.receive_json()
 		if data["scale"] not in (2, 4):
@@ -54,7 +59,7 @@ class ToolsPage(BaseRoute):
 			return await websocket.close()
 
 		loop = asyncio.get_event_loop()
-		out_img = await loop.run_in_executor(None, self.upscaler.upscale, PIL.Image.open(io.BytesIO(img)), data["scale"], data["model"])
+		out_img = await loop.run_in_executor(None, self.upscaler.upscale, image, data["scale"], data["model"])
 		out_img_io = io.BytesIO()
 		out_img.save(out_img_io, "png")
 		out_img_io.seek(0)

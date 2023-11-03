@@ -55,7 +55,7 @@ class Upscaler:
 				ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 				for url in model_info["urls"]:
 					model_path = load_file_from_url(url=url, model_dir=os.path.join(ROOT_DIR, "weights"), progress=True, file_name=None)
-			type(self).upsamplers[model_name] = RealESRGANer(scale=model_info["netscale"], model_path=model_path, dni_weight=None, model=type(self).models[model_name], tile=192, tile_pad=8, pre_pad=0, half=True)
+			type(self).upsamplers[model_name] = RealESRGANer(scale=model_info["netscale"], model_path=model_path, dni_weight=None, model=type(self).models[model_name], tile=512, tile_pad=10, pre_pad=0, half=True)
 		return True
 
 	def upscale(self, input_img: PIL.Image.Image, outscale: int=4, model_name: str="RealESRGAN_x4plus_anime_6B") -> PIL.Image.Image | None:

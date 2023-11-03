@@ -5,7 +5,7 @@
 # Environment
 
 ## Dependencies
-Dependencies are in pyproject.toml
+Dependencies are in [pyproject.toml](/pyproject.toml)
 (also in [install_requirements.bat](/install_requirements.bat)/[install_requirements.sh](/install_requirements.sh) file: `torch` `torchvision` `torchaudio` `realesrgan`)
 
 ## Environment
@@ -31,3 +31,11 @@ MONGODB_CONNECTION=put your MongoDB conection here
 | `MIDDLEWARE_SECRET` | Secret key for middleware | `aR2xJWfgNb15R7FplXtxywDGwGIBjpm0` |
 | `LOGIN_SECRET` | Secret key for fastapi-login Login Manager | `nMtq2UHYFJxCLYOzN4BXb3bI89sy5RFd` |
 | `MONGODB_CONNECTION` | Connection string from MongoDB | `mongodb://USERNAME:PASSWORD@IP:PORT` |
+
+# Used materials in project
+| Source | Description |
+| --- | --- |
+| [gpt4free](https://github.com/xtekky/gpt4free) | GPT 3.5 + GPT 4 |
+| [Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN) | Upscaler |
+| [haku-img](https://github.com/KohakuBlueleaf/a1111-sd-webui-haku-img/blob/main/scripts/main.py) | Sketch Maker + Color Correction |
+| [Silero](https://github.com/snakers4/silero-models) | TTS + STT |

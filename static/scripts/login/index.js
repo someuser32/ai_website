@@ -25,6 +25,7 @@ function Login(username, password, save) {
 			default:
 				break;
 		};
+		document.body.style.cursor = "default";
 	};
 	xhr.send($.param({
 		"username": username,
@@ -32,6 +33,7 @@ function Login(username, password, save) {
 		"save": save != undefined ? +save : 0,
 	}));
 	document.getElementsByName("submit")[0].disabled = true;
+	document.body.style.cursor = "wait";
 	return true;
 };
 
@@ -64,6 +66,7 @@ function Register(username, email, password, captcha) {
 			default:
 				break;
 		};
+		document.body.style.cursor = "default";
 	};
 	xhr.send(JSON.stringify({
 		"username": username,
@@ -72,6 +75,7 @@ function Register(username, email, password, captcha) {
 		"captcha": captcha,
 	}));
 	document.getElementsByName("submit")[0].disabled = true;
+	document.body.style.cursor = "wait";
 	return true;
 };
 

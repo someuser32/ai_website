@@ -12,17 +12,29 @@ function Upscale(file, scale, model) {
 	});
 	socket.addEventListener("message", (event) => {
 		if (!send_json) {
-			send_json = true;
-			socket.send(JSON.stringify({
-				"scale": scale,
-				"model": model,
-			}));
+			const msg = JSON.parse(event.data);
+			if (msg["status"] == "success") {
+				send_json = true;
+				socket.send(JSON.stringify({
+					"scale": scale,
+					"model": model,
+				}));
+			} else if (msg["status"] == "error") {
+				if (msg["reason"] != undefined) {
+					alert(msg["reason"]);
+				};
+				document.getElementsByName("submit")[0].disabled = false;
+				document.body.style.cursor = "default";
+				document.getElementById("UpscaledImage").classList.remove("Loading");
+			};
 		} else {
 			if (event.data instanceof Blob) {
-				const blob = new Blob([event.data]);
-				const url = URL.createObjectURL(blob);
-				console.log(url)
-				document.getElementsByName("upscaled-image")[0].src = url;
+				const reader = new FileReader();
+				reader.addEventListener("load", () => {
+					document.getElementsByName("upscaled-image")[0].src = reader.result;
+					document.getElementById("UpscaledImage").classList.add("HasImage");
+				});
+				reader.readAsDataURL(new File([event.data], "upscaled.png", {type: "image/png", lastModified: event.data.lastModified}));
 			} else {
 				const msg = JSON.parse(event.data);
 				if (msg["status"].toLowerCase() == "error") {
@@ -32,7 +44,11 @@ function Upscale(file, scale, model) {
 				};
 			};
 			document.getElementsByName("submit")[0].disabled = false;
+			document.body.style.cursor = "default";
+			document.getElementById("UpscaledImage").classList.remove("Loading");
 		};
 	});
 	document.getElementsByName("submit")[0].disabled = true;
+	document.body.style.cursor = "wait";
+	document.getElementById("UpscaledImage").classList.add("Loading");
 };

@@ -17,6 +17,10 @@
 }
 
 @media only screen and (max-width: 992px) {
+	#Body .Container .Row {
+		display: block;
+	}
+
 	#Body .Container .Row .Content:not(:first-child) {
 		margin-top: 25px;
 	}
@@ -25,8 +29,7 @@
 		margin-left: 0px;
 	}
 
-	#Body .Container .Row .Image {
-		display: block;
+	#Body .Container .Row .Content.Image {
 		margin-left: auto;
 		margin-right: auto;
 	}
