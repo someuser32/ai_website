@@ -1,8 +1,50 @@
-import PIL.Image
+from dataclasses import dataclass, field
+from decimal import Decimal
+
 import cv2
+import PIL.Image
 import numpy as np
 
 class SketchMaker:
+	@dataclass()
+	class arg_range:
+		start : int | float
+		stop : int | float
+		step : int | float = 1
+		default : int | float | None = None
+		name : str = ""
+		range : tuple[int | float] = field(init=False)
+
+		def __post_init__(self):
+			if self.start > self.stop and self.step > 0:
+				raise ValueError
+			elif self.start < self.stop and self.step < 0:
+				raise ValueError
+			elif self.start != self.stop and self.step == 0:
+				raise ValueError
+			if self.default is None:
+				self.default = self.start
+			range, stop, step = set(), Decimal(str(self.stop)), Decimal(str(self.step))
+			i = Decimal(str(self.start))
+			while i <= stop:
+				range.add(float(i))
+				i += step
+			self.range = tuple(range)
+
+		def __contains__(self, __key: object) -> bool:
+			if not isinstance(__key, (int, float)):
+				return False
+			return self.start <= __key <= self.stop
+
+	ranges = {
+		"kernel": arg_range(0, 25, 1, 0, "Kernel size"),
+		"sigma": arg_range(1, 5, 0.05, 1.4, "Sigma"),
+		"k_sigma": arg_range(1, 5, 0.05, 1.6, "K Sigma"),
+		"eps": arg_range(-0.2, 0.2, 0.005, -0.03, "Epsilon"),
+		"phi": arg_range(1, 50, 1, 10, "Phi"),
+		"gamma": arg_range(0.75, 1, 0.005, 1, "Gamma"),
+	}
+
 	def __init__(self):
 		pass
 
@@ -15,6 +57,9 @@ class SketchMaker:
 			phi: 1 - 50 (1)
 			gamma: 0.75 - 1 (0.005)
 		"""
+		if kernel % 2 == 0:
+			kernel -= 1
+
 		img = cv2.cvtColor(np.array(input_img), cv2.COLOR_RGB2GRAY)
 
 		dog = cv2.GaussianBlur(img, (kernel, kernel), sigma) - (gamma-0.001) * cv2.GaussianBlur(img, (kernel, kernel), sigma*k_sigma)

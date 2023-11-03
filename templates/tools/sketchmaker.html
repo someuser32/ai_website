@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css') }}" type="text/css">
+		<link rel="stylesheet" href="{{ url_for('static', path='/css' ~ request.path ~ '/index.css') }}" type="text/css">
+		<link rel="stylesheet" href="{{ url_for('static', path='/css/styles_override.css') }}" type="text/css">
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=AR+One+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+		<script src="{{ url_for('static', path='/scripts/lib/jquery.js') }}"></script>
+		<script src="{{ url_for('static', path='/scripts/lib/util.js') }}"></script>
+		<script src="{{ url_for('static', path='/scripts/tools/sketch-maker/index.js') }}"></script>
+		<title>Sketch Maker - Am I Robot</title>
+	</head>
+	<body>
+		{% include "blocks/header.html" %}
+		<div id="Body">
+			<div class="Container">
+				<div class="Row">
+					<form class="Form" onsubmit="Sketch(GetUploadedFiles(document.getElementsByName('input-image')[0])[0], ...[...document.querySelectorAll('table tbody tr.Key input')].map((input, i, a) => (parseFloat(input.value)))); return false;">
+						<div id="InputFile" class="ImageBox Clickable" name="input-image" onclick="FileClick(this, ['image/png', '.jpg', '.jpeg'], ImageFiles)" ondrop="FileDrop(this, ['png', 'jpeg', 'jpg'], event, ImageFiles);" ondragover="event.preventDefault();" required>
+							<a>Choose image</a>
+							<img/>
+						</div>
+						<table>
+							<tbody>
+								{% for key, range in ranges.items() %}
+									<tr class="{{ key[0].upper() ~ key[1:] }} Key">
+										<td>{{ range.name }}:</td>
+										<td>
+											<input name="{{ key }}" type="range" min="{{ range.start }}" max="{{ range.stop }}" step="{{ range.step }}" value="{{ range.default }}" oninput="this.nextElementSibling.value = this.value" style="vertical-align: middle;">
+											<output></output>
+											<script>
+												inputs = document.getElementsByTagName("input");
+												inputs[inputs.length-1].oninput();
+											</script>
+										</td>
+									</tr>
+								{% endfor %}
+								<tr class="Submit">
+									<td></td>
+									<td><input name="submit" type="submit" class="right" value="Sketch"></td>
+								</tr>
+							</tbody>
+						</table>
+					</form>
+				</div>
+				<div class="Row">
+					<div id="ResultImage" class="ImageBox">
+						<img class="OnlyLoaded" name="upscaled-image" alt="upscaled" />
+						<a class="OnlyNotLoaded NotLoading">Sketch</a>
+						<svg class="LoadingSpinner" viewBox="0 0 50 50">
+							<circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5" />
+						</svg>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% include "blocks/footer.html" %}
+	</body>
+</html>

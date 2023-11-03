@@ -1,14 +1,13 @@
 /**
  * @param {File} file
- * @param {number} scale
- * @param {string} model
+ * @param {Array<number>} args
  * @returns {void}
  */
-function Upscale(file, scale, model) {
+function Sketch(file, ...args) {
 	if (file == undefined) {
 		return false;
 	};
-	const socket = new WebSocket(`ws://${location.host}/websocket/tools/upscaler/upscale`);
+	const socket = new WebSocket(`ws://${location.host}/websocket/tools/sketch-maker/sketch`);
 	let send_json = false;
 	socket.addEventListener("open", (event) => {
 		socket.send(file);
@@ -18,10 +17,8 @@ function Upscale(file, scale, model) {
 			const msg = JSON.parse(event.data);
 			if (msg["status"] == "success") {
 				send_json = true;
-				socket.send(JSON.stringify({
-					"scale": scale,
-					"model": model,
-				}));
+				const json = Object.fromEntries(["kernel", "sigma", "k_sigma", "eps", "phi", "gamma"].map((key, i) => ([key, args[i]])));
+				socket.send(JSON.stringify(json));
 			} else if (msg["status"] == "error") {
 				if (msg["reason"] != undefined) {
 					alert(msg["reason"]);

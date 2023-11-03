@@ -17,7 +17,7 @@
 		<div id="Body">
 			<div class="Container">
 				<div class="Row">
-					<form class="UpscalerForm" onsubmit="Upscale(document.getElementsByName('input-image')[0].uploaded_files[0], parseInt(document.getElementsByName('scale')[0].value), document.getElementsByName('model')[0].value); return false;">
+					<form class="Form" onsubmit="Upscale(GetUploadedFiles(document.getElementsByName('input-image')[0])[0], parseInt(document.getElementsByName('scale')[0].value), document.getElementsByName('model')[0].value); return false;">
 						<table>
 							<tbody>
 								<tr class="File">
@@ -52,7 +52,7 @@
 					</form>
 				</div>
 				<div class="Row">
-					<div id="UpscaledImage" class="ImageBox">
+					<div id="ResultImage" class="ImageBox">
 						<img class="OnlyLoaded" name="upscaled-image" alt="upscaled" />
 						<a class="OnlyNotLoaded NotLoading">Upscaled image</a>
 						<svg class="LoadingSpinner" viewBox="0 0 50 50">

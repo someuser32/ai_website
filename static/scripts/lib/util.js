@@ -62,3 +62,11 @@ function ImageFiles(element, files) {
 	element.uploaded_files = files;
 	return true;
 };
+
+/**
+ * @param {Element} element
+ * @returns {Array<File>}
+ */
+function GetUploadedFiles(element) {
+	return element.uploaded_files || [];
+};
