@@ -26,10 +26,11 @@ g4f = "^0.1.7.9"
 pillow = "^10.1.0"
 opencv-python = "^4.8.1.78"
 numpy = "^1.26.1"
+blendmodes = "^2023"
 
 [tool.isort]
 profile = "black"
-skip_glob = "^(venv.+)"
+skip_glob = ["venv/*", "venv-dev/*"]
 
 [build-system]
 requires = ["poetry-core"]

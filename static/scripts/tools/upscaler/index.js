@@ -34,7 +34,7 @@ function Upscale(file, scale, model) {
 			if (event.data instanceof Blob) {
 				const reader = new FileReader();
 				reader.addEventListener("load", () => {
-					document.getElementsByName("upscaled-image")[0].src = reader.result;
+					document.getElementsByName("result-image")[0].src = reader.result;
 					document.getElementById("ResultImage").classList.add("HasImage");
 				});
 				reader.readAsDataURL(new File([event.data], "upscaled.png", {type: "image/png", lastModified: event.data.lastModified}));

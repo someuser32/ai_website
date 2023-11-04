@@ -1,6 +1,6 @@
 from typing import Any, Callable, Coroutine, Sequence
 
-from fastapi import FastAPI, Depends
+from fastapi import Depends, FastAPI
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 

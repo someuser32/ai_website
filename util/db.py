@@ -13,7 +13,14 @@ from motor.motor_asyncio import AsyncIOMotorClient
 import util.config as config
 
 from .exceptions import UserAlreadyExistsError
-from .lib import parse_deepdiff_keys, recursively_getvalue, recursively_removekey, recursively_setvalue, recursively_setvalue_from, safe_typecast
+from .lib import (
+    parse_deepdiff_keys,
+    recursively_getvalue,
+    recursively_removekey,
+    recursively_setvalue,
+    recursively_setvalue_from,
+    safe_typecast,
+)
 from .user import User
 
 
@@ -44,7 +51,7 @@ class DB(AsyncIOMotorClient):
 		if user is not None:
 			raise UserAlreadyExistsError(f"user {username} is already exists!")
 		default_user = await self.users.find_one(filter={"__is_default": True})
-		user_data = type(self).sync_user_data({"username": username, "email": email, "password_hash": bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")}, default_user)
+		user_data = type(self).sync_user_data({"username": username, "email": email, "password_hash": bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8"), "registration_date": datetime.datetime.now(tz=config.TIMEZONE)}, default_user)
 		try:
 			await self.users.insert_one(user_data)
 		except pymongo.errors.DuplicateKeyError:
