@@ -9,29 +9,29 @@
 		<link href="https://fonts.googleapis.com/css2?family=AR+One+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 		<script src="{{ url_for('static', path='/scripts/lib/jquery.js') }}"></script>
 		<script src="{{ url_for('static', path='/scripts/lib/util.js') }}"></script>
-		<script src="{{ url_for('static', path='/scripts/tools/upscaler/index.js') }}"></script>
-		<title>Upscaler - Am I Robot</title>
+		<script src="{{ url_for('static', path='/scripts/tools/stt/index.js') }}"></script>
+		<title>STT - Am I Robot</title>
 	</head>
 	<body>
 		{% include "blocks/header.html" %}
 		<div id="Body">
 			<div class="Container">
 				<div class="Row">
-					<form class="Form" onsubmit='Upscale(GetUploadedFiles(document.getElementsByName("input-image")[0])[0], parseInt(document.getElementsByName("scale")[0].value), document.querySelector("input[name=\"model\"]:checked").value); return false;'>
+					<form class="Form" onsubmit='STT(document.getElementsByName("input-audio")[0].files[0], document.getElementsByName("language")[0].value); return false;'>
 						<table>
 							<tbody>
 								<tr class="Audio">
 									<td>Audio:</td>
-									<td><input name="audio" type="file" required></td>
+									<td><input name="input-audio" accept="audio/wav" type="file" required></td>
 								</tr>
-								<tr class="Model">
-									<td class="top">Model:</td>
+								<tr class="Languages">
+									<td class="top">Language:</td>
 									<td>
-										<ul>
-											{% for model_name in models %}
-												<li><label><input name="model" type="radio" required value="{{ model_name }}">{{ model_name }}</label></li>
+										<select name="language">
+											{% for language in languages %}
+												<option value="{{ language }}">{{ language }}</option>
 											{% endfor %}
-										</ul>
+										</select>
 									</td>
 								</tr>
 							</tbody>
@@ -40,13 +40,7 @@
 					</form>
 				</div>
 				<div class="Row">
-					<div id="ResultImage" class="ImageBox">
-						<img class="OnlyLoaded" name="result-image" alt="upscaled" />
-						<a class="OnlyNotLoaded NotLoading">Upscaled image</a>
-						<svg class="LoadingSpinner" viewBox="0 0 50 50">
-							<circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5" />
-						</svg>
-					</div>
+					<a id="Result" class="Result">Speech's text will appear here</a>
 				</div>
 			</div>
 		</div>

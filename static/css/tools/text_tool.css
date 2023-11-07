@@ -1,0 +1,8 @@
+@import "../index/index.css";
+@import "tool.css";
+
+#Body .Container .Row .Result:not(.HasResult) {
+	color: var(--text-placeholder-color);
+	user-select: none;
+	font-style: italic;
+}

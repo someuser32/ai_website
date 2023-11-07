@@ -5,11 +5,11 @@ from typing import Annotated
 
 import PIL.Image
 from fastapi import Body, Depends, File, Form, Request, Response, WebSocket
-from fastapi.responses import Response
+from fastapi.responses import Response, PlainTextResponse
 from pydantic import BaseModel
 
 from .routes import BaseRoute
-from .tools_util import ColorCorrection, SketchMaker, Upscaler, TTS, VoiceMod
+from .tools_util import ColorCorrection, SketchMaker, Upscaler, TTS, VoiceMod, STT
 
 
 class UpscalerUpscaleRequestModel(BaseModel):
@@ -25,6 +25,7 @@ class ToolsPage(BaseRoute):
 			"/tools/color-correction": self.color_correction_page,
 			"/tools/sketch-maker": self.sketchmaker_page,
 			"/tools/tts": self.tts_page,
+			"/tools/stt": self.stt_page,
 			"/api/tools/color-correction/correct": (self.color_correction_api_correct, {
 				"methods": ("POST",),
 			}),
@@ -32,6 +33,9 @@ class ToolsPage(BaseRoute):
 				"methods": ("POST",),
 			}),
 			"/api/tools/tts/tts": (self.tts_api_tts, {
+				"methods": ("POST",),
+			}),
+			"/api/tools/stt/stt": (self.stt_api_stt, {
 				"methods": ("POST",),
 			}),
 		}
@@ -49,6 +53,9 @@ class ToolsPage(BaseRoute):
 		self._tts = TTS()
 		self._voicemod = VoiceMod()
 		self.tts.load_models()
+
+		self._stt = STT()
+		self.stt.load_models()
 
 	@property
 	def upscaler(self) -> Upscaler:
@@ -69,6 +76,10 @@ class ToolsPage(BaseRoute):
 	@property
 	def voicemod(self) -> VoiceMod:
 		return self._voicemod
+
+	@property
+	def stt(self) -> STT:
+		return self._stt
 
 	async def tools_page(self, request: Request):
 		return self.templates.TemplateResponse("tools.html", {"request": request})
@@ -124,7 +135,7 @@ class ToolsPage(BaseRoute):
 			loop = asyncio.get_event_loop()
 			out_img = await loop.run_in_executor(None, lambda: self.color_correction.correct(image, temperature, hue, brightness, contrast, saturation, gamma, exposure_offset, vignette, noise, sharpness, hdr))
 		except BaseException as e:
-			return {"status": "error", "reason": e.args[0]}
+			return {"status": "error", "reason": ", ".join(repr(i) for i in e.args)}
 		else:
 			out_img_io = io.BytesIO()
 			out_img.save(out_img_io, "png")
@@ -148,7 +159,7 @@ class ToolsPage(BaseRoute):
 			loop = asyncio.get_event_loop()
 			out_img = await loop.run_in_executor(None, lambda: self.sketchmaker.sketch(image, kernel, sigma, k_sigma, eps, phi, gamma))
 		except BaseException as e:
-			return {"status": "error", "reason": e.args[0]}
+			return {"status": "error", "reason": ", ".join(repr(i) for i in e.args)}
 		else:
 			out_img_io = io.BytesIO()
 			out_img.save(out_img_io, "png")
@@ -177,6 +188,26 @@ class ToolsPage(BaseRoute):
 			if pitch != 0:
 				audio = await loop.run_in_executor(None, lambda: self.voicemod.pitch(audio=audio, pitch_shift=pitch))
 		except BaseException as e:
-			return {"status": "error", "reason": e.args[0]}
+			return {"status": "error", "reason": ", ".join(repr(i) for i in e.args)}
 
 		return Response(content=audio.read(), media_type="audio/wav")
+
+	async def stt_page(self, request: Request):
+		return self.templates.TemplateResponse("tools/stt.html", {"request": request, "languages": STT.languages})
+
+	async def stt_api_stt(self, request: Request, file: Annotated[bytes, File()], language: Annotated[str, Form()]):
+		if len(file) > 10*1024*1024:
+			return {"status": "error", "reason": "audio cannot be greater than 10 MB!"}
+
+		if language not in STT.languages:
+			return {"status": "error", "reason": "unknown language!"}
+
+		try:
+			audio = io.BytesIO(file)
+
+			loop = asyncio.get_event_loop()
+			text = await loop.run_in_executor(None, lambda: self.stt.read_text(audio=audio, language=language))
+		except BaseException as e:
+			return {"status": "error", "reason": ", ".join(repr(i) for i in e.args)}
+
+		return PlainTextResponse(content=text)

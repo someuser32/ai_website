@@ -30,6 +30,7 @@ blendmodes = "^2023"
 num2words = "^0.5.13"
 pydub = "^0.25.1"
 soundfile = "^0.12.1"
+omegaconf = "^2.3.0"
 
 [tool.isort]
 profile = "black"
