@@ -9,7 +9,7 @@ from fastapi.responses import Response, PlainTextResponse
 from pydantic import BaseModel
 
 from .routes import BaseRoute
-from .tools_util import ColorCorrection, SketchMaker, Upscaler, TTS, VoiceMod, STT
+from .tools_util import ColorCorrection, SketchMaker, Upscaler, TTS, VoiceMod, STT, GPT
 
 
 class UpscalerUpscaleRequestModel(BaseModel):
@@ -26,6 +26,8 @@ class ToolsPage(BaseRoute):
 			"/tools/sketch-maker": self.sketchmaker_page,
 			"/tools/tts": self.tts_page,
 			"/tools/stt": self.stt_page,
+			"/tools/chatgpt-3.5": self.chatgpt_3_5_page,
+			"/tools/chatgpt-4": self.chatgpt_4_page,
 			"/api/tools/color-correction/correct": (self.color_correction_api_correct, {
 				"methods": ("POST",),
 			}),

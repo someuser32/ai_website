@@ -6,3 +6,4 @@ from .sketchmaker import *
 from .upscaler import *
 from .tts import *
 from .stt import *
+from .gpt import *

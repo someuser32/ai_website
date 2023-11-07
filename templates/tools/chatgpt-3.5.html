@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css') }}" type="text/css">
+		<link rel="stylesheet" href="{{ url_for('static', path='/css' ~ request.path ~ '/index.css') }}" type="text/css">
+		<link rel="stylesheet" href="{{ url_for('static', path='/css/styles_override.css') }}" type="text/css">
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=AR+One+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+		<script src="{{ url_for('static', path='/scripts/lib/jquery.js') }}"></script>
+		<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+		<script src="{{ url_for('static', path='/scripts/lib/util.js') }}"></script>
+		<script src="{{ url_for('static', path='/scripts/tools/stt/index.js') }}"></script>
+		<title>STT - Am I Robot</title>
+	</head>
+	<body>
+		{% include "blocks/header.html" %}
+		<div id="Body">
+			<div class="Container">
+				<div class="Row">
+					<form class="Form" onsubmit='STT(document.getElementsByName("input-audio")[0].files[0], document.getElementsByName("language")[0].value); return false;'>
+						<table>
+							<tbody>
+								<tr class="Audio">
+									<td>Audio:</td>
+									<td><input name="input-audio" accept="audio/wav" type="file" required></td>
+								</tr>
+								<tr class="Languages">
+									<td class="top">Language:</td>
+									<td>
+										<select name="language">
+											{% for language in languages %}
+												<option value="{{ language }}">{{ language }}</option>
+											{% endfor %}
+										</select>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<input name="submit" type="submit" class="right" value="Upscale">
+					</form>
+				</div>
+				<div class="Row">
+					<a id="Result" class="Result">Speech's text will appear here</a>
+				</div>
+			</div>
+		</div>
+		{% include "blocks/footer.html" %}
+	</body>
+</html>
