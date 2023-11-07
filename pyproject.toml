@@ -27,6 +27,9 @@ pillow = "^10.1.0"
 opencv-python = "^4.8.1.78"
 numpy = "^1.26.1"
 blendmodes = "^2023"
+num2words = "^0.5.13"
+pydub = "^0.25.1"
+soundfile = "^0.12.1"
 
 [tool.isort]
 profile = "black"

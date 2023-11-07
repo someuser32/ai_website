@@ -1,5 +1,4 @@
 import os
-from typing import Iterable, TypedDict
 
 import numpy as np
 import PIL.Image
@@ -9,12 +8,7 @@ from realesrgan import RealESRGANer
 
 
 class Upscaler:
-	class model_info(TypedDict):
-		urls: Iterable[str]
-		netscale: int
-		num_block: int
-
-	models_info : dict[str, model_info] = {
+	models_info : dict[str, dict[str, tuple[str] | int]] = {
 		"RealESRGAN_x4plus": {
 			"urls": ("https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth",),
 			"netscale": 4,

@@ -1,5 +1,4 @@
 @import "../index/index.css";
-@import "../imagebox.css";
 
 #Body .Container .Row .Form table tbody tr td.top {
 	vertical-align: top;
@@ -20,18 +19,8 @@
 	margin-right: auto;
 }
 
-#Body .Container .Row .Form .ImageBox {
-	margin-left: auto;
-	margin-right: auto;
-}
-
-#Body .Container .Row #ResultImage {
+#Body .Container .Row #ResultAudio {
 	margin-top: 15px;
-}
-
-#Body .Container .Row #ResultImage.HasImage .OnlyNotLoaded,
-#Body .Container .Row #ResultImage:not(.HasImage) .OnlyLoaded {
-	display: none;
 }
 
 input[type="submit"] {

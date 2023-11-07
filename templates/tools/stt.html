@@ -20,18 +20,9 @@
 					<form class="Form" onsubmit='Upscale(GetUploadedFiles(document.getElementsByName("input-image")[0])[0], parseInt(document.getElementsByName("scale")[0].value), document.querySelector("input[name=\"model\"]:checked").value); return false;'>
 						<table>
 							<tbody>
-								<tr class="File">
-									<div id="InputFile" class="ImageBox Clickable" name="input-image" onclick="FileClick(this, ['image/png', '.jpg', '.jpeg'], ImageFiles)" ondrop="FileDrop(this, ['png', 'jpeg', 'jpg'], event, ImageFiles);" ondragover="event.preventDefault();" required>
-										<a>Choose image</a>
-										<img/>
-									</div>
-								</tr>
-								<tr class="Scale">
-									<td>Scale:</td>
-									<td>
-										<label><input name="scale" type="radio" required value="2">2</label>
-										<label><input name="scale" type="radio" required value="4">4</label>
-									</td>
+								<tr class="Audio">
+									<td>Audio:</td>
+									<td><input name="audio" type="file" required></td>
 								</tr>
 								<tr class="Model">
 									<td class="top">Model:</td>

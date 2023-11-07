@@ -9,7 +9,7 @@ from fastapi.responses import Response
 from pydantic import BaseModel
 
 from .routes import BaseRoute
-from .tools_util import ColorCorrection, SketchMaker, Upscaler
+from .tools_util import ColorCorrection, SketchMaker, Upscaler, TTS, VoiceMod
 
 
 class UpscalerUpscaleRequestModel(BaseModel):
@@ -24,20 +24,31 @@ class ToolsPage(BaseRoute):
 			"/tools/upscaler": self.upscaler_page,
 			"/tools/color-correction": self.color_correction_page,
 			"/tools/sketch-maker": self.sketchmaker_page,
+			"/tools/tts": self.tts_page,
 			"/api/tools/color-correction/correct": (self.color_correction_api_correct, {
 				"methods": ("POST",),
 			}),
 			"/api/tools/sketch-maker/sketch": (self.sketchmaker_api_sketch, {
 				"methods": ("POST",),
 			}),
+			"/api/tools/tts/tts": (self.tts_api_tts, {
+				"methods": ("POST",),
+			}),
 		}
 		self.websockets = {
 			"/websocket/tools/upscaler/upscale": self.upscaler_api_upscale,
 		}
+
 		self._upscaler = Upscaler()
 		self.upscaler.load_models()
+
 		self._color_correction = ColorCorrection()
+
 		self._sketchmaker = SketchMaker()
+
+		self._tts = TTS()
+		self._voicemod = VoiceMod()
+		self.tts.load_models()
 
 	@property
 	def upscaler(self) -> Upscaler:
@@ -50,6 +61,14 @@ class ToolsPage(BaseRoute):
 	@property
 	def sketchmaker(self) -> SketchMaker:
 		return self._sketchmaker
+
+	@property
+	def tts(self) -> TTS:
+		return self._tts
+
+	@property
+	def voicemod(self) -> VoiceMod:
+		return self._voicemod
 
 	async def tools_page(self, request: Request):
 		return self.templates.TemplateResponse("tools.html", {"request": request})
@@ -136,3 +155,28 @@ class ToolsPage(BaseRoute):
 			out_img_io.seek(0)
 
 		return Response(content=out_img_io.read(), media_type="image/png")
+
+	async def tts_page(self, request: Request):
+		return self.templates.TemplateResponse("tools/tts.html", {"request": request, "models": TTS.models_speakers, "num2words_langs": TTS.supported_num2words})
+
+	async def tts_api_tts(self, request: Request, text: Annotated[str, Form()], model: Annotated[str, Form()], speaker: Annotated[str, Form()], pitch: Annotated[int, Form()]):
+		if len(text) > 1000:
+			return {"status": "error", "reason": "text cannot be greater than 1000 characters!"}
+
+		if model not in TTS.models_speakers:
+			return {"status": "error", "reason": "unknown model name!"}
+
+		if speaker not in TTS.models_speakers[model]:
+			return {"status": "error", "reason": "unknown speaker!"}
+
+		try:
+			text = f"{self.tts.format_numbers(text=text, language=self.tts.get_speaker_language(model_name=model, speaker=speaker))}..."
+
+			loop = asyncio.get_event_loop()
+			audio = await loop.run_in_executor(None, lambda: self.tts.create_audio(model_name=model, speaker=speaker, text=text))
+			if pitch != 0:
+				audio = await loop.run_in_executor(None, lambda: self.voicemod.pitch(audio=audio, pitch_shift=pitch))
+		except BaseException as e:
+			return {"status": "error", "reason": e.args[0]}
+
+		return Response(content=audio.read(), media_type="audio/wav")

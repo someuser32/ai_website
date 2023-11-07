@@ -5,3 +5,4 @@ __pycache__
 .ruff_cache
 dev
 routes/tools_util/upscaler/weights/*.pth
+routes/tools_util/tts/models/*.pt

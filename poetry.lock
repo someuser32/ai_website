@@ -714,6 +714,16 @@ trio = ["trio (>=0.14,<0.23)"]
 wmi = ["wmi (>=1.5.1,<2.0.0)"]
 
 [[package]]
+name = "docopt"
+version = "0.6.2"
+description = "Pythonic argument parser, that will make you smile"
+optional = false
+python-versions = "*"
+files = [
+    {file = "docopt-0.6.2.tar.gz", hash = "sha256:49b3a825280bd66b3aa83585ef59c4a8c82f2c8a522dbe754a8bc8d08c85c491"},
+]
+
+[[package]]
 name = "dotenv-python"
 version = "0.0.1"
 description = "Read .env(-ish) configuration file for python web applications."
@@ -1515,6 +1525,20 @@ files = [
 ]
 
 [[package]]
+name = "num2words"
+version = "0.5.13"
+description = "Modules to convert numbers to words. Easily extensible."
+optional = false
+python-versions = "*"
+files = [
+    {file = "num2words-0.5.13-py3-none-any.whl", hash = "sha256:39e662c663f0a7e15415431ea68eb3dc711b49e3b776d93403e1da0a219ca4ee"},
+    {file = "num2words-0.5.13.tar.gz", hash = "sha256:a3064716fbbf90d75c449450cebfbc73a6a13e63b2531d09bdecc3ab1a2209cf"},
+]
+
+[package.dependencies]
+docopt = ">=0.6.2"
+
+[[package]]
 name = "numpy"
 version = "1.26.1"
 description = "Fundamental package for array computing in Python"
@@ -1946,6 +1970,17 @@ files = [
 typing-extensions = ">=4.6.0,<4.7.0 || >4.7.0"
 
 [[package]]
+name = "pydub"
+version = "0.25.1"
+description = "Manipulate audio with an simple and easy high level interface"
+optional = false
+python-versions = "*"
+files = [
+    {file = "pydub-0.25.1-py2.py3-none-any.whl", hash = "sha256:65617e33033874b59d87db603aa1ed450633288aefead953b30bded59cb599a6"},
+    {file = "pydub-0.25.1.tar.gz", hash = "sha256:980a33ce9949cab2a569606b65674d748ecbca4f0796887fd6f46173a7b0d30f"},
+]
+
+[[package]]
 name = "pyexecjs"
 version = "1.5.1"
 description = "Run JavaScript code from Python"
@@ -2372,6 +2407,29 @@ files = [
     {file = "sortedcontainers-2.4.0-py2.py3-none-any.whl", hash = "sha256:a163dcaede0f1c021485e957a39245190e74249897e2ae4b2aa38595db237ee0"},
     {file = "sortedcontainers-2.4.0.tar.gz", hash = "sha256:25caa5a06cc30b6b83d11423433f65d1f9d76c4c6a0c90e3379eaa43b9bfdb88"},
 ]
+
+[[package]]
+name = "soundfile"
+version = "0.12.1"
+description = "An audio library based on libsndfile, CFFI and NumPy"
+optional = false
+python-versions = "*"
+files = [
+    {file = "soundfile-0.12.1-py2.py3-none-any.whl", hash = "sha256:828a79c2e75abab5359f780c81dccd4953c45a2c4cd4f05ba3e233ddf984b882"},
+    {file = "soundfile-0.12.1-py2.py3-none-macosx_10_9_x86_64.whl", hash = "sha256:d922be1563ce17a69582a352a86f28ed8c9f6a8bc951df63476ffc310c064bfa"},
+    {file = "soundfile-0.12.1-py2.py3-none-macosx_11_0_arm64.whl", hash = "sha256:bceaab5c4febb11ea0554566784bcf4bc2e3977b53946dda2b12804b4fe524a8"},
+    {file = "soundfile-0.12.1-py2.py3-none-manylinux_2_17_x86_64.whl", hash = "sha256:2dc3685bed7187c072a46ab4ffddd38cef7de9ae5eb05c03df2ad569cf4dacbc"},
+    {file = "soundfile-0.12.1-py2.py3-none-manylinux_2_31_x86_64.whl", hash = "sha256:074247b771a181859d2bc1f98b5ebf6d5153d2c397b86ee9e29ba602a8dfe2a6"},
+    {file = "soundfile-0.12.1-py2.py3-none-win32.whl", hash = "sha256:59dfd88c79b48f441bbf6994142a19ab1de3b9bb7c12863402c2bc621e49091a"},
+    {file = "soundfile-0.12.1-py2.py3-none-win_amd64.whl", hash = "sha256:0d86924c00b62552b650ddd28af426e3ff2d4dc2e9047dae5b3d8452e0a49a77"},
+    {file = "soundfile-0.12.1.tar.gz", hash = "sha256:e8e1017b2cf1dda767aef19d2fd9ee5ebe07e050d430f77a0a7c66ba08b8cdae"},
+]
+
+[package.dependencies]
+cffi = ">=1.0"
+
+[package.extras]
+numpy = ["numpy"]
 
 [[package]]
 name = "starlette"
@@ -2884,4 +2942,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.11,<3.12"
-content-hash = "8ff275207dfa56c531097e559fd68f100b2e9b7a2a1e9804f41c37d860c31a31"
+content-hash = "12e677aa9f53bf420f03c84d9200bf49222d1c9f0f95d4fdcaa89302275c4a97"
