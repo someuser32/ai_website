@@ -1,19 +1,46 @@
-# Am I robot? | AIr
+# Am I robot?
 
-[Description](/pyproject.toml)
+<div align="center">
 
-# Environment
+python fastapi server with AI tools
 
-## Dependencies
-Dependencies are in [pyproject.toml](/pyproject.toml)
-(also in [install_requirements.bat](/install_requirements.bat)/[install_requirements.sh](/install_requirements.sh) file: `torch` `torchvision` `torchaudio` `realesrgan`)
+[![License: GNU GPLv3](https://img.shields.io/badge/License-GNU%20GPLv3-yellow.svg)](https://opensource.org/license/gpl-3-0/)
+
+</div>
+
+## Installation
+
+clone repository
+
+```sh
+git clone https://github.com/someuser32/ai_website
+```
+
+run install_requirements
+
+```sh
+./install_requirements
+```
+
+## Usage
+
+run main.py
+
+```sh
+python3 main.py
+```
 
 ## Environment
+
+### Dependencies
+Dependencies are in [pyproject.toml](/pyproject.toml) and in [install_requirements.bat](/install_requirements.bat)/[install_requirements.sh](/install_requirements.sh) file `torch` `torchvision` `torchaudio` `realesrgan`)
+
+### Environment
 Tested on Python 3.11.4 / Windows 11, but should work on >= Python 3.10 and other OS
+
 
 ### .env
 You must create .env file with following keys
-
 ```env
 TIMEZONE=put your timezone here
 
@@ -32,7 +59,7 @@ MONGODB_CONNECTION=put your MongoDB conection here
 | `LOGIN_SECRET` | Secret key for fastapi-login Login Manager | `nMtq2UHYFJxCLYOzN4BXb3bI89sy5RFd` |
 | `MONGODB_CONNECTION` | Connection string from MongoDB | `mongodb://USERNAME:PASSWORD@IP:PORT` |
 
-# Used materials in project
+## Used materials in project
 | Source | Description |
 | --- | --- |
 | [gpt4free](https://github.com/xtekky/gpt4free) | GPT 3.5 + GPT 4 |
