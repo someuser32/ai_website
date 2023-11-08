@@ -4,17 +4,11 @@ from contextlib import suppress as except_error
 from typing import Annotated
 
 import PIL.Image
-from fastapi import Body, Depends, File, Form, Request, Response, WebSocket
-from fastapi.responses import Response, PlainTextResponse
-from pydantic import BaseModel
+from fastapi import File, Form, Request, Response, WebSocket
+from fastapi.responses import Response, PlainTextResponse, StreamingResponse
 
 from .routes import BaseRoute
 from .tools_util import ColorCorrection, SketchMaker, Upscaler, TTS, VoiceMod, STT, GPT
-
-
-class UpscalerUpscaleRequestModel(BaseModel):
-	model: str = "RealESRGAN_x4plus_anime_6B"
-	scale: int = 4
 
 
 class ToolsPage(BaseRoute):
@@ -26,8 +20,7 @@ class ToolsPage(BaseRoute):
 			"/tools/sketch-maker": self.sketchmaker_page,
 			"/tools/tts": self.tts_page,
 			"/tools/stt": self.stt_page,
-			"/tools/chatgpt-3.5": self.chatgpt_3_5_page,
-			"/tools/chatgpt-4": self.chatgpt_4_page,
+			"/tools/chatgpt": self.chatgpt_page,
 			"/api/tools/color-correction/correct": (self.color_correction_api_correct, {
 				"methods": ("POST",),
 			}),
@@ -38,6 +31,9 @@ class ToolsPage(BaseRoute):
 				"methods": ("POST",),
 			}),
 			"/api/tools/stt/stt": (self.stt_api_stt, {
+				"methods": ("POST",),
+			}),
+			"/api/tools/gpt/gpt": (self.gpt_api_gpt, {
 				"methods": ("POST",),
 			}),
 		}
@@ -58,6 +54,8 @@ class ToolsPage(BaseRoute):
 
 		self._stt = STT()
 		self.stt.load_models()
+
+		self._gpt = GPT()
 
 	@property
 	def upscaler(self) -> Upscaler:
@@ -82,6 +80,10 @@ class ToolsPage(BaseRoute):
 	@property
 	def stt(self) -> STT:
 		return self._stt
+
+	@property
+	def gpt(self) -> GPT:
+		return self._gpt
 
 	async def tools_page(self, request: Request):
 		return self.templates.TemplateResponse("tools.html", {"request": request})
@@ -213,3 +215,20 @@ class ToolsPage(BaseRoute):
 			return {"status": "error", "reason": ", ".join(repr(i) for i in e.args)}
 
 		return PlainTextResponse(content=text)
+
+	async def chatgpt_page(self, request: Request):
+		return self.templates.TemplateResponse("tools/chatgpt.html", {"request": request, "models": tuple(GPT.models.keys())})
+
+	async def gpt_api_gpt(self, request: Request, text: Annotated[str, Form()], model: Annotated[str, Form()]):
+		if len(text) > 1000:
+			return {"status": "error", "reason": "text cannot be greater than 1000 characters!"}
+
+		if model not in GPT.models:
+			return {"status": "error", "reason": "unknown model!"}
+
+		try:
+			answer = await self.gpt.async_send(text=text, model_name=model)
+		except BaseException as e:
+			return {"status": "error", "reason": ", ".join(repr(i) for i in e.args)}
+
+		return PlainTextResponse(content=answer)

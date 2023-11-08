@@ -10,38 +10,42 @@
 		<script src="{{ url_for('static', path='/scripts/lib/jquery.js') }}"></script>
 		<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 		<script src="{{ url_for('static', path='/scripts/lib/util.js') }}"></script>
-		<script src="{{ url_for('static', path='/scripts/tools/stt/index.js') }}"></script>
-		<title>STT - Am I Robot</title>
+		<script src="{{ url_for('static', path='/scripts/tools/chatgpt/index.js') }}"></script>
+		<title>ChatGPT - Am I Robot</title>
 	</head>
 	<body>
 		{% include "blocks/header.html" %}
 		<div id="Body">
 			<div class="Container">
 				<div class="Row">
-					<form class="Form" onsubmit='STT(document.getElementsByName("input-audio")[0].files[0], document.getElementsByName("language")[0].value); return false;'>
+					<form class="Form" onsubmit='GPT(document.getElementsByName("input-text")[0].value, document.getElementsByName("model")[0].value); return false;'>
 						<table>
 							<tbody>
-								<tr class="Audio">
-									<td>Audio:</td>
-									<td><input name="input-audio" accept="audio/wav" type="file" required></td>
+								<tr class="Text">
+									<td class="top">Text:</td>
+									<td><textarea name="input-text" type="text" maxlength="1000" required></textarea></td>
 								</tr>
-								<tr class="Languages">
-									<td class="top">Language:</td>
+								<tr class="Model">
+									<td>Model:</td>
 									<td>
-										<select name="language">
-											{% for language in languages %}
-												<option value="{{ language }}">{{ language }}</option>
+										<select name="model">
+											{% for model in models %}
+												<option value="{{ model }}">{{ model }}</option>
 											{% endfor %}
 										</select>
+										<script type="text/javascript">
+											const params = new URLSearchParams(location.search);
+											document.getElementsByName("model")[0].value = params.get("model") || "{{ models[0] }}";
+										</script>
 									</td>
 								</tr>
 							</tbody>
 						</table>
-						<input name="submit" type="submit" class="right" value="Upscale">
+						<input name="submit" type="submit" class="right" value="Send">
 					</form>
 				</div>
 				<div class="Row">
-					<a id="Result" class="Result">Speech's text will appear here</a>
+					<a id="Result" class="Result"></a>
 				</div>
 			</div>
 		</div>
