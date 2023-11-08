@@ -90,6 +90,12 @@ table tbody tr td *.right {
 	animation: SpinnerDash 1.5s ease-in-out infinite;
 }
 
+span.placeholder {
+	color: var(--text-placeholder-color);
+	user-select: none;
+	font-style: italic;
+}
+
 @keyframes SpinnerRotate {
 	100% {
 		transform: rotate(360deg);

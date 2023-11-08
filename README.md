@@ -1,12 +1,11 @@
-# Am I robot?
+# Am I Robot?
 
-<div align="center">
+>access to AI is easy as air
 
 python fastapi server with AI tools
 
 [![License: GNU GPLv3](https://img.shields.io/badge/License-GNU%20GPLv3-yellow.svg)](https://opensource.org/license/gpl-3-0/)
 
-</div>
 
 ## Installation
 
