@@ -5,10 +5,11 @@ from typing import Annotated
 
 import PIL.Image
 from fastapi import File, Form, Request, Response, WebSocket
-from fastapi.responses import Response, PlainTextResponse, StreamingResponse
+from fastapi.responses import PlainTextResponse, RedirectResponse, Response
+from fastapi_login import LoginManager
 
 from .routes import BaseRoute
-from .tools_util import ColorCorrection, SketchMaker, Upscaler, TTS, VoiceMod, STT, GPT
+from .tools_util import GPT, STT, TTS, ColorCorrection, SketchMaker, Upscaler, VoiceMod
 
 
 class ToolsPage(BaseRoute):
@@ -58,6 +59,10 @@ class ToolsPage(BaseRoute):
 		self._gpt = GPT()
 
 	@property
+	def manager(self) -> LoginManager:
+		return self._manager
+
+	@property
 	def upscaler(self) -> Upscaler:
 		return self._upscaler
 
@@ -89,10 +94,20 @@ class ToolsPage(BaseRoute):
 		return self.templates.TemplateResponse("tools.html", {"request": request})
 
 	async def upscaler_page(self, request: Request):
+		if request.state.user is None:
+			return RedirectResponse(f"{request.url_for('/login')}?utm_source=tools")
 		return self.templates.TemplateResponse("tools/upscaler.html", {"request": request, "models": Upscaler.model_names})
 
 	async def upscaler_api_upscale(self, websocket: WebSocket):
 		await websocket.accept()
+
+		token = await websocket.receive_text()
+		user = await self.manager.get_current_user(token)
+		if user is None:
+			await websocket.send_json({"status": "error", "reason": "unauthorized!"})
+			return await websocket.close()
+
+		await websocket.send_json({"status": "success"})
 
 		img = await websocket.receive_bytes()
 		image = PIL.Image.open(io.BytesIO(img))
@@ -124,6 +139,8 @@ class ToolsPage(BaseRoute):
 		return await websocket.close()
 
 	async def color_correction_page(self, request: Request):
+		if request.state.user is None:
+			return RedirectResponse(f"{request.url_for('/login')}?utm_source=tools")
 		return self.templates.TemplateResponse("tools/color-correction.html", {"request": request, "ranges": ColorCorrection.ranges})
 
 	async def color_correction_api_correct(self, request: Request, file: Annotated[bytes, File()], temperature: Annotated[int, Form()], hue: Annotated[int, Form()], brightness: Annotated[int, Form()], contrast: Annotated[int, Form()], saturation: Annotated[int, Form()], gamma: Annotated[float, Form()], exposure_offset: Annotated[float, Form()], vignette: Annotated[float, Form()], noise: Annotated[float, Form()], sharpness: Annotated[float, Form()], hdr: Annotated[float, Form()]):
@@ -148,6 +165,8 @@ class ToolsPage(BaseRoute):
 		return Response(content=out_img_io.read(), media_type="image/png")
 
 	async def sketchmaker_page(self, request: Request):
+		if request.state.user is None:
+			return RedirectResponse(f"{request.url_for('/login')}?utm_source=tools")
 		return self.templates.TemplateResponse("tools/sketchmaker.html", {"request": request, "ranges": SketchMaker.ranges})
 
 	async def sketchmaker_api_sketch(self, request: Request, file: Annotated[bytes, File()], kernel: Annotated[int, Form()], sigma: Annotated[float, Form()], k_sigma: Annotated[float, Form()], eps: Annotated[float, Form()], phi: Annotated[float, Form()], gamma: Annotated[float, Form()]):
@@ -172,6 +191,8 @@ class ToolsPage(BaseRoute):
 		return Response(content=out_img_io.read(), media_type="image/png")
 
 	async def tts_page(self, request: Request):
+		if request.state.user is None:
+			return RedirectResponse(f"{request.url_for('/login')}?utm_source=tools")
 		return self.templates.TemplateResponse("tools/tts.html", {"request": request, "models": TTS.models_speakers, "num2words_langs": TTS.supported_num2words})
 
 	async def tts_api_tts(self, request: Request, text: Annotated[str, Form()], model: Annotated[str, Form()], speaker: Annotated[str, Form()], pitch: Annotated[int, Form()]):
@@ -197,6 +218,8 @@ class ToolsPage(BaseRoute):
 		return Response(content=audio.read(), media_type="audio/wav")
 
 	async def stt_page(self, request: Request):
+		if request.state.user is None:
+			return RedirectResponse(f"{request.url_for('/login')}?utm_source=tools")
 		return self.templates.TemplateResponse("tools/stt.html", {"request": request, "languages": STT.languages})
 
 	async def stt_api_stt(self, request: Request, file: Annotated[bytes, File()], language: Annotated[str, Form()]):
@@ -217,6 +240,8 @@ class ToolsPage(BaseRoute):
 		return PlainTextResponse(content=text)
 
 	async def chatgpt_page(self, request: Request):
+		if request.state.user is None:
+			return RedirectResponse(f"{request.url_for('/login')}?utm_source=tools")
 		return self.templates.TemplateResponse("tools/chatgpt.html", {"request": request, "models": tuple(GPT.models.keys())})
 
 	async def gpt_api_gpt(self, request: Request, text: Annotated[str, Form()], model: Annotated[str, Form()]):

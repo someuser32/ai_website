@@ -70,7 +70,10 @@ class LoginPage(BaseRoute):
 			raise InvalidCredentialsException
 
 		session_token = self.manager.create_access_token(data={"sub": user.username}, expires=datetime.timedelta(days=14) if save == 1 else datetime.timedelta(hours=2))
-		self.manager.set_cookie(response, session_token)
+		# NOTE: may be security risks if i disable httponly?
+		# but it's need for websocket requests
+		response.set_cookie(key=self.manager.cookie_name, value=session_token, httponly=False)
+		# self.manager.set_cookie(response, session_token)
 		response.status_code = 200
 		return response
 

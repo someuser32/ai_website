@@ -13,7 +13,7 @@ async function Login(username, password, save) {
 	document.getElementsByName("submit")[0].disabled = true;
 	document.body.style.cursor = "wait";
 
-	const r = await fetch("/api/login", {method: "POST", body: formdata, headers: [["Content-Type", "application/x-www-form-urlencoded"]]});
+	const r = await fetch("/api/login", {method: "POST", body: formdata});
 	switch (r.status) {
 		case 200:
 			location.reload();
