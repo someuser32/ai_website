@@ -47,7 +47,7 @@ DB_NAME=put your database name here (from MongoDB)
 
 MIDDLEWARE_SECRET=put your secret key for middleware
 LOGIN_SECRET=put your secret key for login
-MONGODB_CONNECTION=put your MongoDB conection here
+MONGODB_SECRET=put your MongoDB conection here
 ```
 
 | Key | Description | Example |
@@ -56,7 +56,7 @@ MONGODB_CONNECTION=put your MongoDB conection here
 | `DB_NAME` | Name of your database from MongoDB | `infomatrix` |
 | `MIDDLEWARE_SECRET` | Secret key for middleware | `aR2xJWfgNb15R7FplXtxywDGwGIBjpm0` |
 | `LOGIN_SECRET` | Secret key for fastapi-login Login Manager | `nMtq2UHYFJxCLYOzN4BXb3bI89sy5RFd` |
-| `MONGODB_CONNECTION` | Connection string from MongoDB | `mongodb://USERNAME:PASSWORD@IP:PORT` |
+| `MONGODB_SECRET` | Connection string from MongoDB | `mongodb://USERNAME:PASSWORD@IP:PORT` |
 
 ## Used materials in project
 | Source | Description |

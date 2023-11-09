@@ -29,7 +29,7 @@
 									<tr class="{{ key[0].upper() ~ key[1:] }} Key">
 										<td>{{ range.name }}:</td>
 										<td>
-											<input name="{{ key }}" type="range" min="{{ range.start }}" max="{{ range.stop }}" step="{{ range.step }}" value="{{ range.default }}" oninput="this.nextElementSibling.value = this.value" style="vertical-align: middle;">
+											<input name="{{ key }}" type="range" min="{{ range.start }}" max="{{ range.stop }}" step="{{ range.step }}" value="{{ range.default }}" oninput="this.nextElementSibling.value = this.value; return true;" style="vertical-align: middle;">
 											<output></output>
 											<script>
 												inputs = document.getElementsByTagName("input");
